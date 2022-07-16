@@ -5,6 +5,75 @@
 \save_transient_properties true
 \origin unavailable
 \textclass article
+\begin_preamble
+\usepackage[T1]{fontenc}
+% \usepackage{showframe}          % http://www.ctan.org/pkg/showframe
+\usepackage[a4paper]{geometry}   % [a4paper]
+\geometry{verbose,
+	tmargin=1.9cm,
+	bmargin=3.5cm,
+	lmargin=2.7cm,
+	rmargin=2.425cm,
+	headheight=1.5cm,
+	headsep=1cm,
+	footskip=1.5cm}
+\setcounter{secnumdepth}{3}
+\usepackage{url}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{setspace}
+\usepackage[width=.75\textwidth]{caption}
+\usepackage{enumitem}
+\usepackage{float}
+%\usepackage{algorithmic}
+%\usepackage{algorithm}
+\usepackage[ruled,vlined]{algorithm2e}
+\usepackage{footmisc}
+\usepackage{caption}
+\let\counterwithout\relax
+\let\counterwithin\relax
+\usepackage{chngcntr}
+\usepackage[english]{babel}
+\usepackage{afterpage}
+%\usepackage{float}
+\usepackage{tikz}	% Drawing
+\usepackage{tkz-euclide}
+\usepackage{tikz-3dplot}
+\usepackage{wrapfig}
+\usepackage{xargs} % Use more than one optional parameter in a new commands
+\usepackage{hyperref}
+\usepackage{commath}
+%\usepackage{subcaption} % subfigures
+\usepackage{subfig} % to use subfloat
+\usepackage{graphicx}
+%\usepackage{fancyhdr} % fancy pagestyles
+\usepackage{tabularx}
+%\usepackage{showframe} % show page frames
+%%\usepackage{biblatex}
+
+
+\usepackage{multicol}  % multiple columns
+
+%% Use Times New Roman font for text and Belleek font for math
+%% Please make sure that the 'esint' package is turned off in the
+%% 'Math options' page.
+\usepackage[varg]{txfonts}
+
+%% Use Utopia text with Fourier-GUTenberg math
+%\usepackage{fourier}
+
+%% Bitstream Charter text with Math Design math
+%\usepackage[charter]{mathdesign}
+
+
+%% Make the multiline figure/table captions indent so that the second
+%% line "hangs" right below the first one.
+%\usepackage[format=hang]{caption}
+
+%% Indent even the first paragraph in each section
+\usepackage{indentfirst}
+\end_preamble
 \use_default_options true
 \maintain_unincluded_children false
 \language english
@@ -29,6 +98,7 @@
 \bibtex_command default
 \index_command default
 \paperfontsize default
+\spacing single
 \use_hyperref false
 \papersize default
 \use_geometry false
@@ -44,10 +114,11 @@
 \use_package undertilde 1
 \cite_engine basic
 \cite_engine_type default
+\biblio_style plain
 \use_bibtopic false
 \use_indices false
 \paperorientation portrait
-\suppress_date false
+\suppress_date true
 \justification true
 \use_refstyle 1
 \use_minted 0
@@ -79,58 +150,357 @@
 Doctoral Minimum
 \end_layout
 
-\begin_layout Title
-Marko Sahan
+\begin_layout Section
+Motivation
 \end_layout
 
-\begin_layout Abstract
-Natural Language Processing (NLP) is one of several main fields in pattern
- recognition which is designed to let a machine to make decicions based
- on the semantical understanding.
- We narrowed down our research primarly to a text classification problem,
- specifically the coreference resolution case.
- The task combines the complexity in model archetecture, training data and
- learning method selections.
- In first parts we cover the problem of NLP classification models uncertainty
- representation.
- Better models uncertainty understanding let us to simulate active learning
- by selecting more optimal batches of training data,that resulted in a training
- data reduction with a higher performance, training speed up, and a better
- understanding of which kind of training examples the model lacks.
+\begin_layout Standard
+The generalized aim of Natural Language Processing (NLP) is a decision making
+ given the contextual understanding.
+ Over the last decade the field made a significant progress not only thanks
+ to the spotlight attention of commercial sector and many scientists but
+ also thanks to the immense investment and improvements in computational
+ power.
+ The current list of NLP tasks includes but not limited to such problems
+ like topic classification
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+ref
+\end_layout
+
+\end_inset
+
+, machine translation
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+ref
+\end_layout
+
+\end_inset
+
+, named entity recognition
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+ref
+\end_layout
+
+\end_inset
+
+, language modeling
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+ref
+\end_layout
+
+\end_inset
+
+, coreference resolution
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+ref
+\end_layout
+
+\end_inset
+
+, etc..
+ Astonishingly, vast amount of task-specific solutions show almost human-like
+ semantics understanding
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Question answering ref
+\end_layout
+
+\end_inset
+
+ that brought even more attention to the field.
+ The increased research activity emerged in a brain gain and a strong boundaries
+ push in the majority of NLP problems, i.e representing language in a vector
+ space
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Attention, etc.
+\end_layout
+
+\end_inset
+
+.
+ Despite the fact that the newer and more complex models architecture approaches
+, accompanied with the motto 
+\begin_inset Quotes eld
+\end_inset
+
+the more parameters, the better
+\begin_inset Quotes erd
+\end_inset
+
+ made the retraining more complicated and costly, the innovative fine tuning
+ approaches present efficient solutions for the problem of the full retraining
+ paradigm
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Ref
+\end_layout
+
+\end_inset
+
+.
+ The non arguable point of these improvements is the increase in the number
+ of training instances i.e language models are usually trained with billions
+ of text data
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+60 billion articles dataset ref
+\end_layout
+
+\end_inset
+
+.
  
 \end_layout
 
-\begin_layout Abstract
-The complex architectures and semantic understanding demands make the coreferenc
-e resolution to be one of the hardest tasks in NLP sphere.
+\begin_layout Standard
+Our research contribution lies in the sense of optimal models learning both
+ for learning from scratch or fine tuning the existing models.
+ The training data collection is a highly time consuming and complicated
+ procedure.
+ In terms of supervised learning, the target labels acquisition is sometimes
+ exceedingly expensive, i.e legal documents relevancy labeling
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+ref
+\end_layout
+
+\end_inset
+
+.
+ The idea of the paper's methodology is to generalize the optimal learning
+ and present its functionality on one of the most complex problems - coreference
+ resolution.
+ We simultaneously explore various correlated sectors such as i) active
+ learning
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+ref
+\end_layout
+
+\end_inset
+
+, ii) models uncertainty representation
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+ref
+\end_layout
+
+\end_inset
+
+ and iii) coreference resolution
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+ref
+\end_layout
+
+\end_inset
+
+.
+ The topics of 
+\shape italic
+active learning
+\shape default
+ and 
+\shape slanted
+models uncertainty representation
+\shape default
+ are codependent.
+ We propose a more granular study and extension of the human-machine communicati
+on
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+ref
+\end_layout
+
+\end_inset
+
+.
+ Among a huge quantity of unlabeled data the machine is expected to tell
+ to an annotator (subject matter expert or so called oracle) what labels
+ from the set of unlabeled data will bring the most information about the
+ studied problem.
+ Hence, the learning involves less data annotations and the model is trained
+ with less efforts.
+ The following task is formulated as a supervised learning task trained
+ with the data obtained by the sequential labels querying from a human expert.
+ This branch of research involves integration of enhanced models uncertainty
+ measurement algorithms e.g deep ensembles
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+[LPB16]
+\end_layout
+
+\end_inset
+
+, MC Dropout
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+[GIG17]
+\end_layout
+
+\end_inset
+
+, SGLD
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+[WT11]
+\end_layout
+
+\end_inset
+
+ or Vadam
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+[KNT+18]
+\end_layout
+
+\end_inset
+
+ to the NLP problem for the empirical model weights distribution estimate.
+ The additional information, given the distribution of predicted labels,
+ allows faster model learning (hot and warm start methods) with a lower
+ number of training data, given the model prediction uncertainty
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+[SSM21]
+\end_layout
+
+\end_inset
+
+.
+ The architecture agnostic generalization of the empirical model weights
+ distribution estimate will grant us more freedom in NLP models selection
+ with preservation of the precise insight into the model processes given
+ prediction-based uncertainty.
+ The model uncertainty measurement and representation are done through the
+ empirical estimate and sampling from the model weights distribution.
+ The uncertainty representation approach provides the model with an expanded
+ vision of both model learning and inference.
+ The described technique has shown that such algorithms may enhance the
+ learning process significantly
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+[OFR+19]
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The subsequent branch of the paper is the active learning and model uncertainty
+ integration into the coreference resolution problem.
+ Coreference resolution (CR) combines detection and linking various mentions
+ of entities within the text: linking noun phrases with their counterparts
+ and pronouns, anaphora disambiguation, linking words with their pro-forms,
+ etc.
+ Hence, CR-solving models significantly impact the quality of the text mining
+ algorithms.
+ The state-of-art CR models architectures
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+ref
+\end_layout
+
+\end_inset
+
+ are not as massive as the language models and not as trivial as some other
+ NLP tasks.
+ Thus, the inclination into the more complex neural network structure, tremendou
+s requirements for context understanding, vast usage potential and a personal
+ interest make this type of model a perfect candidate for uncertainty algorithms
+ integration and improvement.
+ A deeper insight in the model's decision making given the uncertainty is
+ expected to let us set a new coreference resolution state-of-art threshold.
  
 \end_layout
 
 \begin_layout Standard
-Begin with motivation a.k.a, General intro:
+A good use case where coreference resolution can be applied is categorizing
+ entities and their pronouns to provide one with a broader spectrum of informati
+on for future decision making.
+ Based on the extracted data, it is possible to unify all knowledge in the
+ form of a Knowledge Graph (KG)
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+[WMWG17]
 \end_layout
 
-\begin_layout Standard
-1.
- Acgive Learning -> Better Uncertainty represenations -> More information
- about the model.
- -> Easier to understand what is wrong.
- 
-\end_layout
+\end_inset
 
-\begin_layout Standard
-2.
- Coreference Reolution as the problem itself and then the combinations of
- AL.
- 
-\end_layout
-
-\begin_layout Standard
-Continue with the active learning artcles.
-\end_layout
-
-\begin_layout Standard
-Cover CR state of art...
+ which can be further utilized for linking concepts represented by textual
+ spans.
+ Dependencies and connections between the entities can enrich the feature
+ space with highly discriminative samples for other tasks.
+ For example, assume that we have the following two consecutive sentences:
+ "John Smith and Amanda Brown are accountants in XYZ company.
+ Amanda’s colleague was accused of drunk driving".
+ Based on these sentences, one would wish to classify if some of the entities
+ from the text can be charged for a misdemeanor.
+ For a human reader, it is evident that Amanda’s colleague refers to John.
+ However, for a machine, that is a challenging task.
+ Therefore, proper identification of entity clusters like John Smith, Amanda’s
+ colleague, Amanda Brown, XYZ would significantly improve the machine’s
+ understanding of the piece of text.
+ Another potential application of coreference resolution lies within the
+ problem of opinion mining in media resources, where people frequently freely
+ express their views and opinions.
+ For example, heated discussions may emerge under political news articles.
+ In these discussions, participants refer to subjects of the particular
+ article with, for instance, pronouns.
+ Therefore, proper CR may provide better traction of the audience’s attitude
+ towards entities from the article by linking comment mentions to them.
 \end_layout
 
 \end_body
