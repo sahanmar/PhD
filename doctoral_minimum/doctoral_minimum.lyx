@@ -156,13 +156,12 @@ Motivation
 
 \begin_layout Standard
 The generalized aim of Natural Language Processing (NLP) is a decision making
- given the contextual understanding.
- Over the last decade the field made a significant progress not only thanks
- to the spotlight attention of commercial sector and many scientists but
- also thanks to the immense investment and improvements in computational
- power.
- The current list of NLP tasks includes but not limited to such problems
- like topic classification
+ process given the contextual understanding.
+ Over the last decade, the field made significant progress thanks to both
+ spotlight attention of the commercial sector and many scientists and also
+ to the immense investment and improvements in computational power.
+ The current list of NLP tasks includes but is not limited to such problems
+ like: topic classification
 \begin_inset Note Note
 status open
 
@@ -213,8 +212,8 @@ ref
 \end_inset
 
 , etc..
- Astonishingly, vast amount of task-specific solutions show almost human-like
- semantics understanding
+ Astonishingly, a vast amount of task-specific solutions show almost human-like
+ semantic understanding
 \begin_inset Note Note
 status open
 
@@ -225,9 +224,9 @@ Question answering ref
 \end_inset
 
  that brought even more attention to the field.
- The increased research activity emerged in a brain gain and a strong boundaries
- push in the majority of NLP problems, i.e representing language in a vector
- space
+ The increased research activity resulted in a brain gain and a strong push
+ of the boundaries in a majority of NLP problems, i.e representing language
+ in a vector space
 \begin_inset Note Note
 status open
 
@@ -238,8 +237,8 @@ Attention, etc.
 \end_inset
 
 .
- Despite the fact that the newer and more complex models architecture approaches
-, accompanied with the motto 
+ The newer and more complex models' architecture approaches, accompanied
+ by the motto 
 \begin_inset Quotes eld
 \end_inset
 
@@ -247,9 +246,9 @@ the more parameters, the better
 \begin_inset Quotes erd
 \end_inset
 
- made the retraining more complicated and costly, the innovative fine tuning
- approaches present efficient solutions for the problem of the full retraining
- paradigm
+, made the retraining more complicated and costly.
+ However, the innovative fine tuning approaches present efficient solutions
+ for the problem of the full retraining paradigm
 \begin_inset Note Note
 status open
 
@@ -260,7 +259,7 @@ Ref
 \end_inset
 
 .
- The non arguable point of these improvements is the increase in the number
+ The non arguable outcome of these improvements is an increase in the number
  of training instances i.e language models are usually trained with billions
  of text data
 \begin_inset Note Note
@@ -277,12 +276,12 @@ status open
 \end_layout
 
 \begin_layout Standard
-Our research contribution lies in the sense of optimal models learning both
- for learning from scratch or fine tuning the existing models.
+Our research contribution lies in optimal models learning both from scratch
+ or fine tuning of the pre-trained parameters.
  The training data collection is a highly time consuming and complicated
  procedure.
  In terms of supervised learning, the target labels acquisition is sometimes
- exceedingly expensive, i.e legal documents relevancy labeling
+ exceedingly expensive, e.g legal documents relevancy labeling
 \begin_inset Note Note
 status open
 
@@ -294,8 +293,8 @@ ref
 
 .
  The idea of the paper's methodology is to generalize the optimal learning
- and present its functionality on one of the most complex problems - coreference
- resolution.
+ and present its functionality regarding one of the most complex problems
+ - coreference resolution.
  We simultaneously explore various correlated sectors such as i) active
  learning
 \begin_inset Note Note
@@ -307,7 +306,7 @@ ref
 
 \end_inset
 
-, ii) models uncertainty representation
+, ii) models' uncertainty representation
 \begin_inset Note Note
 status open
 
@@ -350,12 +349,12 @@ ref
 
 .
  Among a huge quantity of unlabeled data the machine is expected to tell
- to an annotator (subject matter expert or so called oracle) what labels
- from the set of unlabeled data will bring the most information about the
- studied problem.
+ to an annotator (subject matter expert or so called oracle) which labels
+ from the set of unlabeled data will bring forth the most information about
+ the studied problem.
  Hence, the learning involves less data annotations and the model is trained
- with less efforts.
- The following task is formulated as a supervised learning task trained
+ with less effort.
+ The following task is formulated as a supervised learning technique trained
  with the data obtained by the sequential labels querying from a human expert.
  This branch of research involves integration of enhanced models uncertainty
  measurement algorithms e.g deep ensembles
@@ -399,9 +398,8 @@ status open
 \end_inset
 
  to the NLP problem for the empirical model weights distribution estimate.
- The additional information, given the distribution of predicted labels,
- allows faster model learning (hot and warm start methods) with a lower
- number of training data, given the model prediction uncertainty
+ The additional information, given the distribution of predicted labels
+ and the model prediction uncertainty
 \begin_inset Note Note
 status open
 
@@ -411,11 +409,12 @@ status open
 
 \end_inset
 
-.
+, allows for faster model learning (hot and warm start methods) with a lower
+ number of training data.
  The architecture agnostic generalization of the empirical model weights
  distribution estimate will grant us more freedom in NLP models selection
- with preservation of the precise insight into the model processes given
- prediction-based uncertainty.
+ while preserving the precise insight into the model processes given prediction-
+based uncertainty.
  The model uncertainty measurement and representation are done through the
  empirical estimate and sampling from the model weights distribution.
  The uncertainty representation approach provides the model with an expanded
@@ -435,15 +434,15 @@ status open
 \end_layout
 
 \begin_layout Standard
-The subsequent branch of the paper is the active learning and model uncertainty
+The subsequent branch of this paper is the active learning and model uncertainty
  integration into the coreference resolution problem.
  Coreference resolution (CR) combines detection and linking various mentions
  of entities within the text: linking noun phrases with their counterparts
  and pronouns, anaphora disambiguation, linking words with their pro-forms,
- etc.
+ etc..
  Hence, CR-solving models significantly impact the quality of the text mining
  algorithms.
- The state-of-art CR models architectures
+ The state-of-art CR models' architectures
 \begin_inset Note Note
 status open
 
@@ -453,21 +452,22 @@ ref
 
 \end_inset
 
- are not as massive as the language models and not as trivial as some other
+ are not as massive as the language models and not as trivial as different
  NLP tasks.
- Thus, the inclination into the more complex neural network structure, tremendou
-s requirements for context understanding, vast usage potential and a personal
- interest make this type of model a perfect candidate for uncertainty algorithms
- integration and improvement.
- A deeper insight in the model's decision making given the uncertainty is
- expected to let us set a new coreference resolution state-of-art threshold.
+ Thus, our inclination towards more complex neural network structures, tremendou
+s requirements for context understanding, vast usage potential, and personal
+ interest make this type of model the perfect candidate for uncertainty
+ algorithms integration and improvement.
+ A deeper insight into the models' decision making process given the uncertainty
+ is expected to allow for a new coreference resolution state-of-art threshold
+ to be set.
  
 \end_layout
 
 \begin_layout Standard
-A good use case where coreference resolution can be applied is categorizing
- entities and their pronouns to provide one with a broader spectrum of informati
-on for future decision making.
+An exemplary use case where coreference resolution can be applied is categorizin
+g entities and their pronouns to provide one with a broader spectrum of
+ information for future decision making.
  Based on the extracted data, it is possible to unify all knowledge in the
  form of a Knowledge Graph (KG)
 \begin_inset Note Note
@@ -484,18 +484,18 @@ status open
  Dependencies and connections between the entities can enrich the feature
  space with highly discriminative samples for other tasks.
  For example, assume that we have the following two consecutive sentences:
- "John Smith and Amanda Brown are accountants in XYZ company.
+ "John Smith and Amanda Brown are accountants at XYZ company.
  Amanda’s colleague was accused of drunk driving".
  Based on these sentences, one would wish to classify if some of the entities
- from the text can be charged for a misdemeanor.
+ from the text can be charged with a misdemeanor.
  For a human reader, it is evident that Amanda’s colleague refers to John.
  However, for a machine, that is a challenging task.
  Therefore, proper identification of entity clusters like John Smith, Amanda’s
  colleague, Amanda Brown, XYZ would significantly improve the machine’s
- understanding of the piece of text.
+ understanding of the text.
  Another potential application of coreference resolution lies within the
- problem of opinion mining in media resources, where people frequently freely
- express their views and opinions.
+ problem of opinion mining in media resources, where people frequently express
+ their views and opinions.
  For example, heated discussions may emerge under political news articles.
  In these discussions, participants refer to subjects of the particular
  article with, for instance, pronouns.
