@@ -27,8 +27,8 @@
 \usepackage{enumitem}
 \usepackage{float}
 %\usepackage{algorithmic}
-%\usepackage{algorithm}
-\usepackage[ruled,vlined]{algorithm2e}
+\usepackage{algorithm}
+%\usepackage[ruled,vlined]{algorithm2e}
 \usepackage{footmisc}
 \usepackage{caption}
 \let\counterwithout\relax
@@ -73,6 +73,9 @@
 
 %% Indent even the first paragraph in each section
 \usepackage{indentfirst}
+\usepackage{amsmath}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
 \end_preamble
 \use_default_options true
 \maintain_unincluded_children false
@@ -150,7 +153,7 @@
 Doctoral Minimum
 \end_layout
 
-\begin_layout Section
+\begin_layout Section*
 Motivation
 \end_layout
 
@@ -501,6 +504,6034 @@ status open
  article with, for instance, pronouns.
  Therefore, proper CR may provide better traction of the audience’s attitude
  towards entities from the article by linking comment mentions to them.
+\end_layout
+
+\begin_layout Part
+Single Instance Active Learning 
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+The major part of the content in this part was taken and restructured from
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sahan2021active"
+literal "false"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Supervised classification of texts relies on the availability of reliable
+ class labels for the training data.
+ However, the process of collecting data labels can be complex and costly.
+ A standard procedure is to add labels sequentially by querying an annotator
+ until reaching satisfactory performance.
+ Active learning is a process of selecting unlabeled data records for which
+ the knowledge of the label would bring the highest discriminability of
+ the dataset.
+ In this part, we provide a comparative study of various active learning
+ strategies for different embeddings of the text on various datasets.
+ We focus on Bayesian active learning methods that are used due to their
+ ability to represent the uncertainty of the classification procedure.
+ We compare three types of uncertainty representation: i) SGLD, ii) Dropout,
+ and iii) deep ensembles.
+ The latter two methods in cold- and warm-start versions.
+ The texts were embedded using Fast Text, LASER, and RoBERTa encoding techniques.
+ The methods are tested on two types of datasets, text categorization (Kaggle
+ News Category and Twitter Sentiment140 dataset) and fake news detection
+ (Kaggle Fake News and Fake News Detection datasets).
+ We show that the conventional dropout Monte Carlo approach provides good
+ results for the majority of the tasks.
+ The ensemble methods provide more accurate representation of uncertainty
+ that allows to keep the pace of learning of a complicated problem for the
+ growing number of requests, outperforming the dropout in the long run.
+ However, for the majority of the datasets the active strategy using Dropout
+ MC and Deep Ensembles achieved almost perfect performance even for a very
+ low number of requests.
+ The best results were obtained for the most recent embeddings RoBERTa
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+The development of a text classifier on a new problem requires the availability
+ of the training data and their labels.
+ Labeling involves human annotators and a common practice is to label as
+ many text documents as possible, train a classifier and search for new
+ data and labels if the performance is unsatisfactory.
+ Random choice of the documents for the data set extension can be costly
+ because the new documents may not bring new information for the classification.
+ Active learning strategy aims to select among available unlabeled documents
+ those that the classifier is most uncertain about and queries an annotator
+ for their labels.
+ Therefore, it has the potential to greatly reduce the effort needed for
+ the development of a new system.
+ While it was introduced almost two decades ago, recent improvements in
+ deep learning motivate our attempt to revisit the topic.
+ For example, SVM-based active learning approaches for text classification
+ date back to 2001 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "tong2001support"
+literal "false"
+
+\end_inset
+
+, where the superiority of active learning over random sampling was demonstrated.
+ Since deep recurrent and convolutional neural networks achieve better classific
+ation results, Bayesian active learning methods for deep networks gained
+ popularity especially in image classification 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "gal2017deep"
+literal "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "lowell2019practical"
+literal "false"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+The Bayesian approach is concerned with querying labels for data for which
+ the classifier predicts the greatest uncertainty.
+ The uncertainty is quantified using the so-called acquisition function,
+ such as predictive variance or predictive entropy 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "shannon1948mathematical"
+literal "false"
+
+\end_inset
+
+.
+ While different acquisition functions often provide similar results, different
+ representations of predictive distribution yield much more diverse results.
+ The most popular approach using Dropout MC 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "gal2017deep"
+literal "false"
+
+\end_inset
+
+ has been tested on text classification 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "an2018deep"
+literal "false"
+
+\end_inset
+
+ and named entity recognition 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "shen2017deep"
+literal "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "lowell2019practical"
+literal "false"
+
+\end_inset
+
+, however other techniques such as Langevin dynamics 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "welling2011bayesian"
+literal "false"
+
+\end_inset
+
+ and deep ensembles 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "lakshminarayanan2017simple"
+literal "false"
+
+\end_inset
+
+ are available.
+ Deep ensembles often achieve better performance 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "beluch2018power"
+literal "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "snoek2019can"
+literal "false"
+
+\end_inset
+
+ but require higher computational cost since they train an ensemble of networks
+ after each extension of the data set.
+ One potential solution of this problem has been recently proposed in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ulrych2020denfi"
+literal "false"
+
+\end_inset
+
+, where the ensemble is not trained from a fresh random initialization after
+ each query but initialized randomly around the position of the ensembles
+ from the previous iteration.
+ In this contribution, we test this approach and compare it with the dropout
+ MC and Langevin dynamics representations.
+ We also provide sensitivity study for the choice of the hyperparameters.
+ Active learning for fake news detection was considered in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bhattacharjee2017active"
+literal "false"
+
+\end_inset
+
+ using uncertainty based on probability of classification.
+ It was later extended to a context aware approach 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bhattacharjee2019identifying"
+literal "false"
+
+\end_inset
+
+.
+ An entropy based approach has been presented in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "hasan2020truth"
+literal "false"
+
+\end_inset
+
+ using an ensemble of three different kinds of networks.
+\end_layout
+
+\begin_layout Section
+Methods
+\end_layout
+
+\begin_layout Standard
+Throughout the paper, we will use three different embedding algorithms such
+ as Fast Text 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "mikolov2018advances"
+literal "false"
+
+\end_inset
+
+, LASER 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "artetxe2019massively"
+literal "false"
+
+\end_inset
+
+and RoBERTa 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "liu2019roberta"
+literal "false"
+
+\end_inset
+
+.
+ RoBERTa is a modified BERT transformer model 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "devlin2018bert"
+literal "false"
+
+\end_inset
+
+ based on multi-head attention layers 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "vaswani2017attention"
+literal "false"
+
+\end_inset
+
+.
+ Transformer models provide state of the art results in context understanding
+ and it is advantageous to compare behavior of active learning algorithms
+ with respect to different embedding techniques.
+ Representation of the 
+\begin_inset Formula $i-$
+\end_inset
+
+th text document 
+\begin_inset Formula ${\bf {\bf x}}_{𝑖}$
+\end_inset
+
+ is calculated as the mean value from sentence embeddings of all sentences
+ in the text 
+\begin_inset Formula 
+\[
+{\bf x}_{i}=\frac{1}{|D_{i}|}\sum_{j\in D_{i}}f_{\mathrm{sentence\ embed}}(C^{(j)})
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $𝐷_{i}$
+\end_inset
+
+ is the set of vectors where each vector represents a sentence in the 
+\begin_inset Formula $i-$
+\end_inset
+
+th document, 
+\begin_inset Formula $|𝐷_{i}|$
+\end_inset
+
+ is a cardinality of 
+\begin_inset Formula $𝐷_{i}$
+\end_inset
+
+ , 
+\begin_inset Formula $𝐶^{(𝑗)}$
+\end_inset
+
+ is a matrix of 
+\begin_inset Formula $𝑗-$
+\end_inset
+
+th sentence where words are encoded with one hot or byte pair encoding 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "shibata1999byte"
+literal "false"
+
+\end_inset
+
+ technique and 
+\begin_inset Formula $𝑓_{\mathrm{sentence\ embed}}$
+\end_inset
+
+ is a function that creates sentence embeddings with respect to the given
+ one-hot or byte pair encoded words.
+ Fast Text encoding is made with respect to one-hot encoded words.
+ LASER and transformer based models take byte-per encoded words as an input.
+ Sentence embeddings for LASER and RoBERTa are output of deep neural network
+ models.
+ Sentence embedding for the Fast Text model is calculated as a mean value
+ of all embeddings of words in the sentence.
+ For supervised classification, each document embedding 
+\begin_inset Formula ${\bf x}_{i}$
+\end_inset
+
+ has to have an associated label 
+\begin_inset Formula $\mathbf{y}_{i}$
+\end_inset
+
+.
+ We are concerned with binary classification for simplicity, however, an
+ extension to multiclass is straightforward.
+ We assume that for the full corpus of text documents 
+\begin_inset Formula $\mathbf{X}=[\mathbf{x}_{1},...,\mathbf{x}_{n}]$
+\end_inset
+
+, only an initial set of 
+\begin_inset Formula $𝑙_{0}≪𝑛$
+\end_inset
+
+ labels is available, 
+\begin_inset Formula $\mathbf{Y}^{(0)}=[\mathbf{y}_{0},...,\mathbf{y}_{l_{9}}]$
+\end_inset
+
+, splitting the full set 
+\begin_inset Formula $\mathbf{X}$
+\end_inset
+
+ to the labeled, 
+\begin_inset Formula $\mathbf{X}^{(0)}=[\mathbf{x}_{1},...,\text{x}_{𝑙_{0}}]$
+\end_inset
+
+, and unlabeled parts, 
+\begin_inset Formula $\mathbf{X}\backslash\mathbf{X}^{(0)}$
+\end_inset
+
+.
+ Active learning is defined as a sequential extension of the training data
+ set.
+ In each iteration, 
+\begin_inset Formula $𝑙=1,...,𝐿$
+\end_inset
+
+, the algorithm computes entropy of the predictive probability distribution
+ for each document in the unlabeled dataset and selects the index of the
+ document with the highest entropy (entropy acquisition function), formally:
+\begin_inset Formula 
+\begin{equation}
+k_{l}=\argmax_{k\in K}\mathbb{E}_{p(\theta|\mathbf{X}^{(l-1)},\mathbf{Y}^{(l-1)})}\big(H(\mathbf{y}_{k}|\theta)\big)\label{eq:entropy_acquisition}
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+H(\mathbf{y}_{k}|\theta)=\mathbb{E}_{p(\mathbf{y}_{k}|\theta,\mathbf{x}_{k})}(-\log p(\mathbf{y}_{k}|\theta,\mathbf{x}_{k})\label{eq:entropy_acsquisition_2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $𝐾$
+\end_inset
+
+ is the set of indexes of all unlabeled documents, 
+\begin_inset Formula $\mathbb{E}$
+\end_inset
+
+ is the expectation operator over the posterior probability of the classifier
+ parameters 
+\begin_inset Formula $\theta$
+\end_inset
+
+ trained on all labeled data 
+\begin_inset Formula $𝑝(𝜃|\mathbf{X}^{(𝑙−1)},\mathbf{Y}^{(𝑙−1)})$
+\end_inset
+
+ and 
+\begin_inset Formula $𝐻(\mathbf{y}_{𝑘}|𝜃)$
+\end_inset
+
+ is conditional entropy of the predicted class for 
+\begin_inset Formula $\mathbf{x}_{𝑘}$
+\end_inset
+
+.
+ The document of the selected index is sent to the human annotator with
+ a request for labeling.
+ When the selected text is annotated, the text is added with its label to
+ the labeled data set 
+\begin_inset Formula $\mathbf{X}^{(𝑙)}=[\mathbf{X}^{(𝑙−1)},\mathbf{x}_{𝑘_{𝑙}}]$
+\end_inset
+
+, 
+\begin_inset Formula $\mathbf{Y}^{(𝑙)}=[\mathbf{Y}^{(𝑙−1)},\mathbf{y}_{𝑘_{𝑙}}]$
+\end_inset
+
+.
+ The procedure is repeated 
+\begin_inset Formula $𝐿$
+\end_inset
+
+ times.
+ The active learning process is visualized in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:active_learning_flowchart"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename signle_instance_active_learning_images/active_learning_flow_chart.eps
+	scale 30
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Flowchart of the active learning algorithm
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:active_learning_flowchart"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The key component of the method is a representation of the posterior distributio
+n of the parameter 
+\begin_inset Formula $𝜃$
+\end_inset
+
+.
+ Due to the complexity of the neural networks it is always represented by
+ samples, with a different method of their generation.
+ We will compare the following methods: i) SGLD: Stochastic Gradient with
+ Langevin dynamics 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "welling2011bayesian"
+literal "false"
+
+\end_inset
+
+, which adds additional noise to the gradient in stochastic gradient descent,
+ ii) Dropout MC: is an extension of the ordinary dropout that samples binary
+ mask multiplying output of a layer, hence stopping propagation through
+ all neurons where zeros is sampled through the network.
+ The extension applies the sampled mask even for predictions generating
+ samples from the predictive distribution 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "gal2017deep"
+literal "false"
+
+\end_inset
+
+, iii) Deep ensembles: consist of 
+\begin_inset Formula $𝑁$
+\end_inset
+
+ networks trained in parallel from different initial conditions 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "lakshminarayanan2017simple"
+literal "false"
+
+\end_inset
+
+, and iv) Softmax uncertainty: is the most simple approach that uses only
+ one network to estimate a single value 
+\begin_inset Formula $𝜃$
+\end_inset
+
+ and maximizing entropy 
+\begin_inset Formula $𝐻(\mathbf{y}_{𝑘}|𝜃)$
+\end_inset
+
+ instead of the expectation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:entropy_acquisition"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bhattacharjee2017active"
+literal "false"
+
+\end_inset
+
+.
+ Ensembles based approach is the current state-of-the-art in active learning
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "beluch2018power"
+literal "false"
+
+\end_inset
+
+.
+ While many of these have been tested in active learning, the majority of
+ authors assumed that after each step of active learning, the network training
+ starts from the initial conditions.
+ This is clearly suboptimal, since the information from the previous training
+ is lost.
+ A simple solution was presented in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ulrych2020denfi"
+literal "false"
+
+\end_inset
+
+, where it was argued that estimated results from the previous step can
+ be used as centroids around which the new initial point is sampled.
+ Since this is a form of a warm-start, we also test warm-start strategies
+ for Dropout.
+ The methods for representation of parametric uncertainty are:
+\end_layout
+
+\begin_layout Subsubsection*
+
+\series bold
+Deep Ensemble Filter (DEnFi):
+\end_layout
+
+\begin_layout Standard
+is a deep ensemble method with 10 neural networks in the ensembles and warm-star
+t training strategy 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "lakshminarayanan2017simple"
+literal "false"
+
+\end_inset
+
+ using weights of the ensemble members in the previous iteration as initial
+ conditions for the new ensemble.
+ Each weight is perturbed by an additive Gaussian noise of variance 
+\begin_inset Formula $𝑞$
+\end_inset
+
+ which is a hyperparameter.
+ In our experiments, the ensemble is trained with parameters 
+\begin_inset Formula $\mathrm{initialization\_epochs}=2000$
+\end_inset
+
+ on the initial data and with additional 
+\begin_inset Formula $\mathrm{warm\_start\_epochs}=700$
+\end_inset
+
+ epochs after each extension of the learning data set.
+ DEnFi algorithms are displayed in Algorithms 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "alg:DEnFi_training_algorithm"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "alg:DEnFi_training_algorithm_2"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float algorithm
+wide false
+sideways false
+status open
+
+\begin_layout LyX-Code
+for network in ensemble: 
+\end_layout
+
+\begin_deeper
+\begin_layout LyX-Code
+if not initialized: 
+\end_layout
+
+\begin_deeper
+\begin_layout LyX-Code
+mean = 0 
+\end_layout
+
+\begin_layout LyX-Code
+variance = 
+\begin_inset Formula $𝑞_{0}$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout LyX-Code
+epochs = initialization_epochs 
+\end_layout
+
+\end_deeper
+\begin_layout LyX-Code
+else: 
+\end_layout
+
+\begin_deeper
+\begin_layout LyX-Code
+mean = nn.weights 
+\end_layout
+
+\begin_layout LyX-Code
+variance = 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\text{𝑞}_{0}$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ 
+\end_layout
+
+\begin_layout LyX-Code
+epochs = warm_start_epochs 
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout LyX-Code
+network.weights = gaussian_noise(mean, variance) 
+\end_layout
+
+\begin_layout LyX-Code
+network.train(data, epochs) 
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "alg:DEnFi_training_algorithm"
+
+\end_inset
+
+DEnFi training algorithm
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float algorithm
+wide false
+sideways false
+status open
+
+\begin_layout LyX-Code
+results = empty_array()
+\end_layout
+
+\begin_layout LyX-Code
+for network in ensemble:
+\end_layout
+
+\begin_deeper
+\begin_layout LyX-Code
+results.append(network.predict(data_point))
+\end_layout
+
+\end_deeper
+\begin_layout LyX-Code
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "alg:DEnFi_training_algorithm_2"
+
+\end_inset
+
+DEnFi predicting algorithm
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Dropout MC:
+\end_layout
+
+\begin_layout Standard
+is the standard algorithm 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "gal2017deep"
+literal "false"
+
+\end_inset
+
+ that trains only a single network with sampled dropout indices and uses
+ the sampling even in the prediction step.
+ Generation of the Monte Carlo prediction is obtained by sampling different
+ values of the dropout binary variable and one forward pass of the network
+ for each sample.
+ We study three versions of the algorithm: i) cold-start with 3000 epochs
+ after each request, ii) warm-start with weights from the previous iteration
+ perturbed by an additive noise of variance 
+\begin_inset Formula $q$
+\end_inset
+
+ with 700 epochs and iii) hot-start, with 50 epochs after each request without
+ perturbation (hot start is a warm-start method with 
+\begin_inset Formula $q=0$
+\end_inset
+
+).
+ Dropout rate is 0.5.
+\end_layout
+
+\begin_layout Subsubsection*
+SGLD:
+\end_layout
+
+\begin_layout Standard
+variance of the noise added to the gradient descent: 
+\begin_inset Formula 
+\[
+\hat{\theta}_{n+1}=\hat{\theta}_{n}-\frac{|\mathbf{X}^{(l)}|}{|\mathbf{X}^{(l)}|_{\mathrm{minibatch}}}\frac{\eta_{n}}{2}\Big(\nabla L\big(\mathbf{X}^{(l)},\mathbf{Y}^{(l)},\hat{\theta}_{n}\big)\Big)+\epsilon_{n},\ \epsilon_{n}\sim\mathcal{N}(0,\eta_{n}\mathbf{I})
+\]
+
+\end_inset
+
+where 𝐿 is a loss function and 𝜖𝑛 is noise with covariate matrix 
+\begin_inset Formula $𝜂_{𝑛}\mathbf{I}$
+\end_inset
+
+ where 
+\begin_inset Formula $𝜂_{n}$
+\end_inset
+
+ is the learning rate of the SGD algorithm.
+ We choose initial value of 
+\begin_inset Formula $𝜂_{1}$
+\end_inset
+
+ to be 0.01 and update rule 
+\begin_inset Formula $𝜂_{𝑛+1}=\frac{𝜂_{𝑛}}{\text{𝑏−}3000}+0.05$
+\end_inset
+
+.
+ The noise 
+\begin_inset Formula $𝜖_{𝑛}$
+\end_inset
+
+ is added to the gradient only after 3000 of initial training epochs.
+ Then we draw 50 samples with 100 epochs between consecutive samples to
+ avoid correlation.
+\end_layout
+
+\begin_layout Subsubsection*
+Softmax uncertainty:
+\end_layout
+
+\begin_layout Standard
+The simplest approach to uncertainty representation is a single neural network
+ with a softmax output layer that considers uncertainty as the output of
+ the softmax score.
+ We add it to comparison since it has been applied to active learning in
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bhattacharjee2017active"
+literal "false"
+
+\end_inset
+
+.
+ The model is trained to run 2000 epochs on the initial data with additional
+ 200 epochs after each extension of the learning data set.
+\end_layout
+
+\begin_layout Section
+Experiments
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename signle_instance_active_learning_images/evolutions_auc_categories.eps
+	width 100col%
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:auc_evolution_categories"
+
+\end_inset
+
+Evolution of the mean AUC with growing number of requests for DEnFi, Dropout
+ MC warm-start algorithms and six pairs of categories.
+ The uncertainty bounds are illustrated as one standard deviation from the
+ mean value with respect to 10 runs.
+ Both DEnFi and Dropout MC were initially trained on 10 labeled text documents
+ before sequential learning strategies were initialized
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename signle_instance_active_learning_images/evolutions_auc_embeddings.eps
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:auc_evolution_embeddings"
+
+\end_inset
+
+Evolution of the mean AUC with growing number of requests for DEnFi, Dropout
+ MC warm-start algorithms, two datasets: Fake News (top row) and Fake News
+ Detection (bottom row), and three embeddings: Fats Text (left column),
+ Laser (middle column) and RoBERTa (right column).
+ The uncertainty bounds are illustrated as one standard deviation from the
+ mean value calculated with respect to 5 runs.
+ Both DEnFi and Dropout MC were initially trained on 10 labeled text documents
+ before sequential learning strategies were initialized
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The methods were compared on the positive/negative tweets from the Tweets
+ Dataset 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "go2009twitter"
+literal "false"
+
+\end_inset
+
+, 5 pairs of categories from the News Category Dataset 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dataset"
+literal "false"
+
+\end_inset
+
+ and two types of the news datasets for fake news detection 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "fake_news"
+literal "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "fake_news_detection"
+literal "false"
+
+\end_inset
+
+.
+ Documents from the News Category dataset were downloaded using links provided
+ in the dataset.
+ The names of the tested categories are shown in table 3 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+ADD TABLE
+\end_layout
+
+\end_inset
+
+, Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:auc_evolution_categories"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ and in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:auc_evolution_categories"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Specifically, we compared active learning and random sampling strategies
+ for different settings of document embeddings and different representations
+ of uncertainty.
+ Each experiment was initiated by random choice of the initial training
+ set of 
+\begin_inset Formula $𝑙_{0}=10$
+\end_inset
+
+ samples from 1000 text documents (500 text documents per category), which
+ were the initial 1000 documents of the datasets.
+ For each experiment 
+\begin_inset Formula $𝐿=200$
+\end_inset
+
+ requests for annotation are simulated.
+ The document selection follows the 
+\begin_inset Formula $𝜖-$
+\end_inset
+
+greedy approach 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "watkins1989learning"
+literal "false"
+
+\end_inset
+
+, i.e.
+ the sample with maximum acquisition function 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:entropy_acquisition"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ is accepted with probability 
+\begin_inset Formula $𝜖=\frac{\exp(𝑙−40)}{\exp(\text{𝑙−}40)+1}$
+\end_inset
+
+ .
+ A random document is selected for labeling if not accepted.
+ After each request, the classification performance is evaluated on the
+ remaining part of the selected dataset (i.e.
+ on the 990 text documents in the first evaluation) using the area under
+ the ROC curve (AUC) metrics 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "fawcett2006introduction"
+literal "false"
+
+\end_inset
+
+.
+ In order to make the results statistically valid, we repeat the described
+ simulation loop 10 times for Twitter and News Category datasets and 5 times
+ for Fake News and Fake News Detection datasets.
+\end_layout
+
+\begin_layout Subsection
+Hyperparameter Tuning
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="8" columns="5">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Noise
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+AUC after # of iterations
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Variance
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+50
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+100
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+150
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+200
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $\mathbf{0.945}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.968}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.974$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.976$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.932$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.964$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.976$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.978$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.930$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.961$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.982}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.986$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.4
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.909$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.948$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.976$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $\mathbf{0.990}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.6
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.874$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.921$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.952$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.979$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.805$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.871$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.906$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.941$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\series bold
+Fast Text
+\series default
+ DEnFi
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="8" columns="5">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Noise
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+AUC after # of iterations
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Variance
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+50
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+100
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+150
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+200
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $\mathbf{0.936}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.966}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.972$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.976$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.938}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.966}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.981}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.983$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.920$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.956$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.982}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.989}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.4
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.917$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.955$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.976$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $\mathbf{0.988}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.6
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.894$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.948$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.972$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.986}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.859$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.914$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.941$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.970$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\series bold
+Fast Text
+\series default
+ Dropout
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="8" columns="5">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Noise
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+AUC after # of iterations
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Variance
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+50
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+100
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+150
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+200
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $\mathbf{0.935}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.970}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.982}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.988$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.940}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.954$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.983}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.990}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.903$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.930$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.967$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.987$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.4
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.883$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.911$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.945$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $0.976$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.6
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.799$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.853$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.885$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.945$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.661$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.750$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.818$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.875$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\series bold
+RoBERTa
+\series default
+ DEnFi
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="8" columns="5">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Noise
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+AUC after # of iterations
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Variance
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+50
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+100
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+150
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+200
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $\mathbf{0.930}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.970}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.982$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.986$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.923}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.971}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.986}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.990}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.917$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.959$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.982$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.990}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.4
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.878$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.949$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.974$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $\mathbf{0.990}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.6
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.822$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.908$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.952$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.980$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.643$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.741$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.862$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.921$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\series bold
+RoBERTa
+\series default
+ Dropout
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:fast_text_roberta_tech_science"
+
+\end_inset
+
+Fast Text
+\series default
+ and 
+\series bold
+RoBERTa
+\series default
+ encoding based AUC of text classification after selected number of requests
+ of the active learning using DEnFi and Dropout MC warm-start for various
+ selection of the perturbation noise 𝑞.
+ Average over 10 runs in the Tech vs Science categories.
+ The best result is denoted by a star, results within one standard deviation
+ of the winner are displayed in bold font.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="5">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Noise
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+AUC after # of iterations
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Variance
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+50
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+100
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+150
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+200
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $\mathbf{0.794}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.886}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.910}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.942}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.806}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.877}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.911}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.932}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.806}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.866$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.901}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.911}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\series bold
+Fast Text
+\series default
+ DEnFi
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="5">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Noise
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+AUC after # of iterations
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Variance
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+50
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+100
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+150
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+200
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $\mathbf{0.806}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.879}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.916}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.949}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.804}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.884}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.914$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.939$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.809}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.878}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.912}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.944}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\series bold
+Fast Text
+\series default
+ Dropout
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="5">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Noise
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+AUC after # of iterations
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Variance
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+50
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+100
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+150
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+200
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $\mathbf{0.929}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.986}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.992}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.991$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.923}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.975$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.990$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.998}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.891}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.935$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.955$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.975$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\series bold
+RoBERTa
+\series default
+ DEnFi
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\backslash
+ 
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="5">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Noise
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+AUC after # of iterations
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Variance
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+50
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+100
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+150
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+200
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset Formula $\mathbf{0.941}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.984}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.992}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.993}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.917$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.974$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.992}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.995}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.917$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.959$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.982$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.990$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\series bold
+RoBERTa
+\series default
+ Dropout
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\series bold
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:fast_text_roberta_fake_news"
+
+\end_inset
+
+Fast Text
+\series default
+ and 
+\series bold
+RoBERTa
+\series default
+ encoding based AUC of text classification after selected number of requests
+ of the active learning using DEnFi and Dropout warm-start for various selection
+ of the perturbation noise q.
+ Average over 5 runs on the Fake and True news categories (Fake News Detection
+ dataset).
+ The best result is denoted by a star, results within one standard deviation
+ of the winner are displayed in bold font.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The classification network was designed as a feed-forward NN with one dense
+ layer of 100 neurons with sigmoid activation functions, and softmax output
+ layer.
+ Warm start versions of both Dropout MC and DEnFi have hyperparameter 𝑞
+ that governs the perturbation of the previous result before training on
+ the extended dataset.
+ Tuning of this hyperparameter was performed by a grid search for both the
+ Fast Text and RoBERTa text encoding techniques.
+ Since the main focus of the paper is on the effect of the warm-start strategy,
+ the results of the effect of the noise variance 
+\begin_inset Formula $𝑞$
+\end_inset
+
+ for DEnFi and Dropout MC is displayed in Table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:fast_text_roberta_tech_science"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ and Table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:fast_text_roberta_fake_news"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ for active learning strategy on the Tech vs Science task and Fake News
+ Detection dataset, respectively.
+ 
+\end_layout
+
+\begin_layout Standard
+Based on Table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:fast_text_roberta_tech_science"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ it is clearly seen that the variance of the perturbation noise related
+ to the best result is increasing with the number of requests.
+ We conjecture that the variance has the role of a selector of the exploration/e
+xploitation tradeoff.
+ Low variance favors exploitation and improves quickly, higher variance
+ implies less accurate guesses in the initial iterations but better performance
+ in the long run.
+ The results from Table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:fast_text_roberta_tech_science"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ indicate that higher values of 
+\begin_inset Formula $𝑞$
+\end_inset
+
+ are not performing well thus the range of 𝑞 was reduced for tuning of the
+ hyperparameter for the fake news datasets.
+ The increase of the optimum value of the noise variance with the number
+ of requests is also visible in Table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:fast_text_roberta_fake_news"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, especially for the RoBERTa encoded data.
+ Since calibration of the variance for all methods and all datasets would
+ be too computationally expensive, we ran all remaining experiments with
+ 
+\begin_inset Formula $𝑞=0.3$
+\end_inset
+
+ for Fast Text encoding and 
+\begin_inset Formula $𝑞=0.1$
+\end_inset
+
+ for RoBERTa and LASER encodings.
+ However, tuning of this hyperparameter for an application scenario or an
+ adaptive tuning strategy offers clearly a potential for further improvement.
+\end_layout
+
+\begin_layout Subsection
+Text Category Classification
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:Text_Category_Classification"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename signle_instance_active_learning_images/evolutions_auc_sgld.eps
+	width 100col%
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:auc_evolution_sgld"
+
+\end_inset
+
+Evolution of the mean AUC with growing number of requests for SGLD, Softmax
+ Uncertainty algorithms, and three pairs of categories.
+ The uncertainty bounds are illustrated as one standard deviation from the
+ mean value with respect to 10 runs.
+ Both SGLD and Softmax Uncertainty were initially trained on 10 labeled
+ text documents before sequential learning strategies were initialized
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="8" columns="7">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Method
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Crime/
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Sports/
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Politics/
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Tech/
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Education/
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Pos./Neg.
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Good News
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Comedy
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Business
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Science
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+College
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Tweets
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+SGLD
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.989}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.968$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.944$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.984$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.881$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.621$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+DEnFi, 
+\begin_inset Formula $q=0.3$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.987$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.992}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.971}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.986}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.893}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.603$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+MC Dropout cold-start
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.975$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.978$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.957$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.972$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.898}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.648}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+MC Dropout warm-start, 
+\begin_inset Formula $𝑞=0.3$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.978$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.979$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.954$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.973$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.877$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.657}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+MC Dropout warm-start, 
+\begin_inset Formula $𝑞=0$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.978$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.951$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.944$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mathbf{0.989}^{*}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.824$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.561$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Softmax Uncertainty
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.953$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.939$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.901$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.938$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.800$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $0.609$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:average_AUC_over_categories"
+
+\end_inset
+
+Average AUC over 10 runs for five different algorithms after 200 iterations
+ of active learning and six different datasets.
+ The best result is denoted by a star, results within one standard deviation
+ of the winner are displayed in bold font.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A comparison of AUC of the active learning strategy after 200 requests for
+ all tested algorithms and Fast Text encoding with respect to Tweets and
+ News Category datasets is reported in Table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:average_AUC_over_categories"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ This experiment was designed for comparison of various uncertainty representati
+ons.
+ While all methods except for the Softmax Uncertainty achieved best results
+ on some datasets, the most consistent results were delivered by the DEnFi
+ and Dropout MC methods.
+ The SGLD performance results exhibited the highest variance within the
+ 10 runs of the method.
+ The results for three pair categories and an active learning strategy are
+ visualized in figure 4.
+ Since it is the least reliable method, we will not study it any further.
+ It is clear from Table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:average_AUC_over_categories"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ and Figure 4 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:auc_evolution_sgld"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ that the simple Softmax Uncertainty provides the worst results.
+ Since Dropout MC has comparable computational complexity, the use of simple
+ Softmax Uncertainty is always suboptimal.
+ 
+\end_layout
+
+\begin_layout Standard
+Detailed analysis of the DEnFi and Dropout MC strategies is provided in
+ figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:auc_evolution_categories"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ for Tweets and News Category datasets.
+ For better insight, we also display the performance of the random sampling
+ learning strategy where training data are extended using randomly sampled
+ documents.
+ Note that for random sampling, Dropout MC outperforms consistently DEnFi
+ on all tasks.
+ We conjecture that this is due to the robustness of the dropout regularization.
+ However, the power of DEnFi becomes apparent with the increasing number
+ of requests.
+ It is improving slower than Dropout MC at the beginning, but improves faster,
+ thus outperforming Dropout MC in the long run.
+ We conjecture that this is due to better exploration capability of the
+ DEnFi while Dropout MC excels at exploitation.
+ The speed of improvement depends on the complexity of the learning task.
+ For simpler tasks (such as crime vs.
+ Good News), AUC over 0.98 is achieved quickly.
+ However, for more complex tasks, such as Positive vs Negative Tweets, the
+ number of data needed for improvement is much higher.
+ The active learning is on par with the random sampling up to 125 requests
+ and even after 200 requests, the AUC is below 0.7 indicating poor performance.
+ Note that the active learning strategy of DEnFi starts improving over the
+ random sampling sooner than Dropout MC with a sharper slope which indicates
+ a high probability of obtaining the same profile as the other datasets
+ in the long run.
+\end_layout
+
+\begin_layout Subsection
+Fake News Classification
+\end_layout
+
+\begin_layout Standard
+The fake news data experiment is made under the same initial conditions
+ as in Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:Text_Category_Classification"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ but for a wider choice of the document encoding techniques.
+ Based on results from Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:Text_Category_Classification"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ we show comparison of only the DEnFi and Dropout warm-start for three different
+ types of encodings (Fast Text, LASER, RoBERTa) on the two fake news datasets
+ in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:auc_evolution_embeddings"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ The results for fake news datasets are similar to those for the Twitter
+ and News Category datasets.
+ Advantage of the DEnFi approach is significant only for the Fake News Detection
+ dataset with Laser embeddings.
+ For other cases the difference is negligible.
+ Under the exploration/exploitation hypothesis, this means that the data
+ sets are well separable and more sophisticated exploration capabilities
+ of DEnFi are not needed.
+\end_layout
+
+\begin_layout Standard
+The best performance of the active learning strategy was achieved for the
+ RoBERTa embedding.
+ Note that the embedding has much greater influence on the speed of learning
+ than uncertainty representation.
+\end_layout
+
+\begin_layout Section
+Conclusion
+\end_layout
+
+\begin_layout Standard
+We have studied the suitability of various uncertainty representations for
+ the task of active text classification.
+ The established Dropout MC methodology was compared against deep ensembles,
+ SGLD and simple softmax strategy.
+ To reduce the computational cost, we studied warm-start strategies for
+ both ensembles (called DEnFi) and Dropout MC, that resulted in significant
+ reduction of training epochs per the active learning iteration.
+ The resulting methods exhibit a different tradeoff between exploration
+ and exploitation.
+ While Dropout MC has been found to be more reliable in random sampling
+ strategy and improving faster at the beginning of active learning, the
+ DEnFi was found to prefer exploration sacrificing performance at the beginning
+ but outperforming Dropout MC in the longer run of active learning.
+ The highest deviation of the random strategies between DEnFi and Dropout
+ MC resulted in 0.04 AUC in favor of Dropout MC.
+ However, for the active learning strategy both Dropout MC and DEnFi converged
+ to the same numbers.
+\end_layout
+
+\begin_layout Standard
+Sensitivity of the active learning to the choice of embedding was evaluated
+ on the fake news datasets.
+ It was observed that the most recent embedding method (RoBERTa) facilitated
+ the fastest learning and that the choice of embedding was more important
+ than the uncertainty representation.
+ However, methods of active learning achieved significantly faster learning
+ than the random sampling approach (the difference between the random and
+ the active learning strategies differs from 0.015 AUC up to 0.080 AUC) on
+ all tested datasets of various complexity.
+\end_layout
+
+\begin_layout Part
+Batch Active Learning
+\end_layout
+
+\begin_layout Standard
+Supervised learning of classifiers for text classification and sentiment
+ analysis relies on the availability of labels that may be either difficult
+ or expensive to obtain.
+ A standard procedure is to add labels to the training dataset sequentially
+ by querying an annotator until the model reaches a satisfactory performance.
+ Active learning is a process that optimizes unlabeled data records selection
+ for which the knowledge of the label would bring the highest discriminability
+ of the dataset.
+ Batch active learning is a generalization of a single instance active learning
+ by selecting a batch of documents for labeling.
+ This task is much more demanding because plenty of different factors come
+ into consideration (i.
+ e.
+ batch size, batch evaluation, etc.).
+ In this paper, we provide a large scale study by decomposing the existing
+ algorithms into building blocks and systematically comparing meaningful
+ combinations of these blocks with a subsequent evaluation on different
+ text datasets.
+ While each block is known (warm start weights initialization, Dropout MC,
+ entropy sampling, etc.), many of their combinations like Bayesian strategies
+ with agglomerative clustering are first proposed in our paper with excellent
+ performance.
+ Particularly, our extension of the warm start method to batch active learning
+ is among the top performing strategies on all datasets.
+ We studied the effect of this proposal comparing the outcomes of varying
+ distinct factors of an active learning algorithm.
+ Some of these factors include initialization of the algorithm, uncertainty
+ representation, acquisition function, and batch selection strategy.
+ Further, various combinations of these are tested on selected NLP problems
+ with documents encoded using RoBERTa embeddings.
+ Datasets cover context integrity (Gibberish Wackerow), fake news detection
+ (Kaggle Fake News Detection), categorization of short texts by emotional
+ context (Twitter Sentiment140), and sentiment classification (Amazon Reviews).
+ Ultimately, we show that each of the active learning factors has advantages
+ for certain datasets or experimental settings.
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+Supervised learning of classifiers relies on the availability of class labels
+ which often involves a human annotator for a majority of NLP tasks.
+ This can be costly for large datasets.
+ Active learning is a strategy designed to minimize this cost by automatic
+ selection of those unlabeled documents that are expected to bring useful
+ information for the classifier.
+ Advantages of this approach have been demonstrated even for classical methods
+ such as SVM 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "tong2001support"
+literal "false"
+
+\end_inset
+
+.
+ The most conventional active learning strategies select only one unlabeled
+ document after each training round to query due to the simplicity of its
+ selection.
+ The next query document is selected only after the first one is labeled
+ and the model retrained, which means that the annotator has to wait for
+ retraining.
+ This impractical strategy can be avoided if the active learning algorithm
+ selects a batch of documents.
+ Novel methods for batch active learning appear frequently, each demonstrating
+ advantages on their benchmark data.
+ 
+\end_layout
+
+\begin_layout Standard
+Various comparative studies have been performed recently with various focus
+ and results.
+ Batch active learning was studied in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dor2020active"
+literal "false"
+
+\end_inset
+
+ for only one size of the batch (50 documents per query).
+ Large sensitivity to the type of dataset was reported in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "prabhu2021multi"
+literal "false"
+
+\end_inset
+
+, where different methods won for different data.
+ Large variability of the results was also observed in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "jacobs2021active"
+literal "false"
+
+\end_inset
+
+.
+ In 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "schroder2021uncertainty"
+literal "false"
+
+\end_inset
+
+, the min-margin strategy was shown to be competitive with the prediction
+ entropy-based method on a range of embeddings.
+ The comparative studies shared similar properties, such as a fixed network
+ for embeddings (improvement with retraining can be expected 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "margatina2021bayesian"
+literal "false"
+
+\end_inset
+
+ but may be too costly).
+ All studies also assume a cold start, i.e.
+ completely new initialization of the classifier after each round of querying.
+ This is motivated by the fear of overfitting, which was demonstrated in
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "hu2018active"
+literal "false"
+
+\end_inset
+
+ for hot start, i.e.
+ continuation of training of the classifier.
+ A compromise in the form of warm-start, i.e.
+ adding noise to the weights of the previous classifier, was proposed in
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sahan2021active"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+In this contribution, we take a different approach to benchmarking of the
+ batch active learning algorithms.
+ Specifically, we decompose the algorithms into their building blocks: i)
+ the size of the minibatch, ii) acquisition function, iii) representation
+ of uncertainty of the classifier, and iii) initialization of the network.
+ This approach allows us to quantify contribution of each of the building-block
+ and combine them in previously untested versions.
+ This allows us to demonstrate the following contribution:
+\end_layout
+
+\begin_layout Enumerate
+We present an extension of the Hierarchical Agglomerative Clustering (HAC)
+ approach 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "citovsky2021batch"
+literal "false"
+
+\end_inset
+
+ to the Bayesian setting by replacing the min-margin with a Bayesian acquisition
+ function, such as BALD 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "houlsby2011bayesian"
+literal "false"
+
+\end_inset
+
+.
+ This is a novel combination that has not been tested before.
+\end_layout
+
+\begin_layout Enumerate
+We show that performance of various methods is clustered based on particular
+ building blocks of the method.
+ Thus indicating that active learning methods may be tailored for each target
+ application.
+ A good example of Bayesian methods lies in estimating the distribution
+ of neural networks which performed the best on Fake news but showed the
+ same results on other datasets.
+ 
+\end_layout
+
+\begin_layout Enumerate
+In a large scale study we demonstrate that warm start is often beneficial
+ and even simple methods (such as single neural network with entropy acquisition
+) provide results competitive to, or better than, complex active learning
+ schemes.
+ We also show that cold start approaches reach the same or even worse results
+ than the aforementioned warm start techniques.
+ This is encouraging for practitioners that are interested in the methodology.
+ 
+\end_layout
+
+\begin_layout Standard
+The paper is organized as follows.
+ In Section 2, we briefly review all tested factors of batch active learning.
+ The experimental setup of the sensitivity study is described in Section
+ 3 and the results are reported in Section 4.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintCited"
+bibfiles "bib"
+options "plain"
+
+\end_inset
+
+
 \end_layout
 
 \end_body
