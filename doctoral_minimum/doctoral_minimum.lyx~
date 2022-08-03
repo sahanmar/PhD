@@ -76,6 +76,10 @@
 \usepackage{amsmath}
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
+
+\usepackage{xpatch}
+
+\xpretocmd{\part}{\setcounter{section}{0}}{}{}
 \end_preamble
 \use_default_options true
 \maintain_unincluded_children false
@@ -149,12 +153,153 @@
 
 \begin_body
 
-\begin_layout Title
-Doctoral Minimum
+\begin_layout Standard
+\noindent
+\align center
+\begin_inset Box Frameless
+position "c"
+hor_pos "c"
+has_inner_box 1
+inner_pos "c"
+use_parbox 0
+use_makebox 0
+width "60line%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+\align center
+
+\shape smallcaps
+\size large
+Czech Technical University in Prague
+\shape default
+
+\begin_inset Newline newline
+\end_inset
+
+FACULTY OF ELECTRICAL ENGINEERING
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align block
+\begin_inset VSpace 6cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+
+\series bold
+\size huge
+Active Learning in Natural Data Processing
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator latexpar
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align block
+\begin_inset VSpace vfill
+\end_inset
+
+
+\end_layout
+
+\begin_layout Labeling
+\paragraph_spacing single
+\labelwidthstring MMMMMMMMM
+Author: 
+\series bold
+Marko Sahan
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+
+\lang american
+Final dummy paragraph.
+ Its function is to bear the page break flag
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section*
-Motivation
+Motivation 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+addcontentsline{toc}{section}{Motivation}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -164,43 +309,35 @@ The generalized aim of Natural Language Processing (NLP) is a decision making
  spotlight attention of the commercial sector and many scientists and also
  to the immense investment and improvements in computational power.
  The current list of NLP tasks includes but is not limited to such problems
- like: topic classification
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-ref
-\end_layout
+ like: topic classification 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "wang2012baselines"
+literal "false"
 
 \end_inset
 
-, machine translation
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-ref
-\end_layout
+, machine translation 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "somers1992introduction"
+literal "false"
 
 \end_inset
 
-, named entity recognition
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-ref
-\end_layout
+, named entity recognition 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "wang2020automated"
+literal "false"
 
 \end_inset
 
-, language modeling
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-ref
-\end_layout
+, language modeling 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "smith2022using"
+literal "false"
 
 \end_inset
 
@@ -216,26 +353,22 @@ ref
 
 , etc..
  Astonishingly, a vast amount of task-specific solutions show almost human-like
- semantic understanding
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Question answering ref
-\end_layout
+ semantic understanding 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "thoppilan2022lamda"
+literal "false"
 
 \end_inset
 
  that brought even more attention to the field.
  The increased research activity resulted in a brain gain and a strong push
  of the boundaries in a majority of NLP problems, i.e representing language
- in a vector space
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Attention, etc.
-\end_layout
+ in a vector space 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "vaswani2017attention"
+literal "false"
 
 \end_inset
 
@@ -251,26 +384,22 @@ the more parameters, the better
 
 , made the retraining more complicated and costly.
  However, the innovative fine tuning approaches present efficient solutions
- for the problem of the full retraining paradigm
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Ref
-\end_layout
+ for the problem of the full retraining paradigm 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sahan2021active"
+literal "false"
 
 \end_inset
 
 .
  The non arguable outcome of these improvements is an increase in the number
  of training instances i.e language models are usually trained with billions
- of text data
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-60 billion articles dataset ref
-\end_layout
+ of text data 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "floridi2020gpt"
+literal "false"
 
 \end_inset
 
@@ -284,13 +413,11 @@ Our research contribution lies in optimal models learning both from scratch
  The training data collection is a highly time consuming and complicated
  procedure.
  In terms of supervised learning, the target labels acquisition is sometimes
- exceedingly expensive, e.g legal documents relevancy labeling
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-ref
-\end_layout
+ exceedingly expensive, e.g legal documents relevancy labeling 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "schweighofer2001automatic"
+literal "false"
 
 \end_inset
 
@@ -299,37 +426,8 @@ ref
  and present its functionality regarding one of the most complex problems
  - coreference resolution.
  We simultaneously explore various correlated sectors such as i) active
- learning
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-ref
-\end_layout
-
-\end_inset
-
-, ii) models' uncertainty representation
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-ref
-\end_layout
-
-\end_inset
-
- and iii) coreference resolution
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-ref
-\end_layout
-
-\end_inset
-
-.
+ learning, ii) models' uncertainty representation and iii) coreference resolutio
+n.
  The topics of 
 \shape italic
 active learning
@@ -340,13 +438,11 @@ models uncertainty representation
 \shape default
  are codependent.
  We propose a more granular study and extension of the human-machine communicati
-on
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-ref
-\end_layout
+on 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "thoppilan2022lamda"
+literal "false"
 
 \end_inset
 
@@ -360,55 +456,45 @@ ref
  The following task is formulated as a supervised learning technique trained
  with the data obtained by the sequential labels querying from a human expert.
  This branch of research involves integration of enhanced models uncertainty
- measurement algorithms e.g deep ensembles
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-[LPB16]
-\end_layout
+ measurement algorithms e.g deep ensembles 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "lakshminarayanan2016simple"
+literal "false"
 
 \end_inset
 
-, MC Dropout
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-[GIG17]
-\end_layout
+, MC Dropout 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "gal2017deep"
+literal "false"
 
 \end_inset
 
-, SGLD
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-[WT11]
-\end_layout
+, SGLD 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "welling2011bayesian"
+literal "false"
 
 \end_inset
 
- or Vadam
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-[KNT+18]
-\end_layout
+ or Vadam 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "khan2018fast"
+literal "false"
 
 \end_inset
 
  to the NLP problem for the empirical model weights distribution estimate.
  The additional information, given the distribution of predicted labels
- and the model prediction uncertainty
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-[SSM21]
-\end_layout
+ and the model prediction uncertainty 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sahan2021active"
+literal "false"
 
 \end_inset
 
@@ -423,13 +509,11 @@ based uncertainty.
  The uncertainty representation approach provides the model with an expanded
  vision of both model learning and inference.
  The described technique has shown that such algorithms may enhance the
- learning process significantly
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-[OFR+19]
-\end_layout
+ learning process significantly 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ovadia2019can"
+literal "false"
 
 \end_inset
 
@@ -508,6 +592,9 @@ status open
 
 \begin_layout Part
 Single Instance Active Learning 
+\end_layout
+
+\begin_layout Standard
 \begin_inset Foot
 status open
 
@@ -980,7 +1067,7 @@ status open
 \align center
 \begin_inset Graphics
 	filename signle_instance_active_learning_images/active_learning_flow_chart.eps
-	scale 30
+	scale 25
 
 \end_inset
 
@@ -1112,7 +1199,25 @@ literal "false"
 \begin_layout Subsubsection*
 
 \series bold
-Deep Ensemble Filter (DEnFi):
+Deep Ensemble Filter (DEnFi): 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+addcontentsline{toc}{subsubsection}{Deep Ensemble Filter (DEnFi)}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1151,16 +1256,6 @@ noprefix "false"
 
 \end_inset
 
- and 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "alg:DEnFi_training_algorithm_2"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
 .
 \end_layout
 
@@ -1170,88 +1265,103 @@ wide false
 sideways false
 status open
 
-\begin_layout LyX-Code
-for network in ensemble: 
-\end_layout
+\begin_layout Plain Layout
 
-\begin_deeper
-\begin_layout LyX-Code
-if not initialized: 
-\end_layout
-
-\begin_deeper
-\begin_layout LyX-Code
-mean = 0 
-\end_layout
-
-\begin_layout LyX-Code
-variance = 
-\begin_inset Formula $𝑞_{0}$
-\end_inset
-
- 
-\end_layout
-
-\begin_layout LyX-Code
-epochs = initialization_epochs 
-\end_layout
-
-\end_deeper
-\begin_layout LyX-Code
-else: 
-\end_layout
-
-\begin_deeper
-\begin_layout LyX-Code
-mean = nn.weights 
-\end_layout
-
-\begin_layout LyX-Code
-variance = 
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\xout off
-\uuline off
-\uwave off
-\noun off
-\color none
-
-\begin_inset Formula $\text{𝑞}_{0}$
-\end_inset
-
-
-\family default
+\series bold
+Initialize
 \series default
-\shape default
-\size default
-\emph default
-\bar default
-\strikeout default
-\xout default
-\uuline default
-\uwave default
-\noun default
-\color inherit
- 
+: ensemble classifier structure 
+\begin_inset Formula $\mathbf{y}=\mathbf{y}(\mathbf{x},\theta_{1}^{(0)},...,\theta_{N}^{(0)}),$
+\end_inset
+
+ where 
+\begin_inset Formula $\theta_{j}^{(0)},\ j\in\{1,...,N\}$
+\end_inset
+
+ are different initializations of classifier parameters.
+ Initial data 
+\begin_inset Formula $\mathbf{Y}^{(0)},\mathbf{X}^{(0)}$
+\end_inset
+
+.
+ Noise pertrubation variance is 
+\begin_inset Formula $q$
+\end_inset
+
+.
+ Set iteration counter 
+\begin_inset Formula $i=0$
+\end_inset
+
+
 \end_layout
 
-\begin_layout LyX-Code
-epochs = warm_start_epochs 
+\begin_layout Plain Layout
+
+\series bold
+Iterate 
+\series default
+until a stopping condition:
+\end_layout
+
+\begin_layout Enumerate
+For each parameters' set 
+\begin_inset Formula $\theta_{j}^{(i)},\ j\in\{1,...,N\}$
+\end_inset
+
+ provide 
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+noise pertrubation as 
+\begin_inset Formula $\theta_{j}^{(i)}=\theta_{j}^{(i)}+\gamma_{j}^{(i)},\ \gamma_{j}^{(i)}\sim\mathcal{N}(0,q\mathrm{I})$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Train a classifier for 
+\begin_inset Formula $\mathbf{X}^{(i)},\mathbf{Y}^{(i)}$
+\end_inset
+
+ and initial number of epochs 
+\begin_inset Formula $\gg$
+\end_inset
+
+ warm start epochs if 
+\begin_inset Formula $i=0$
+\end_inset
+
+, else warm start epochs
 \end_layout
 
 \end_deeper
-\end_deeper
-\begin_layout LyX-Code
-network.weights = gaussian_noise(mean, variance) 
-\end_layout
+\begin_layout Enumerate
+Sample a new instance from Equation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:entropy_acquisition"
+plural "false"
+caps "false"
+noprefix "false"
 
-\begin_layout LyX-Code
-network.train(data, epochs) 
+\end_inset
+
+ and update 
+\begin_inset Formula $\mathbf{X}^{(i+1)}=[\mathbf{X}^{(𝑙)},\mathbf{x}_{𝑘_{i+1}}]$
+\end_inset
+
+, 
+\begin_inset Formula $\mathbf{Y}^{(i+1)}=[\mathbf{Y}^{(i)},\mathbf{y}_{𝑘_{i+1}}]$
+\end_inset
+
+, 
+\begin_inset Formula $i=i+1$
+\end_inset
+
+
 \end_layout
 
 \begin_layout LyX-Code
@@ -1264,50 +1374,7 @@ name "alg:DEnFi_training_algorithm"
 
 \end_inset
 
-DEnFi training algorithm
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float algorithm
-wide false
-sideways false
-status open
-
-\begin_layout LyX-Code
-results = empty_array()
-\end_layout
-
-\begin_layout LyX-Code
-for network in ensemble:
-\end_layout
-
-\begin_deeper
-\begin_layout LyX-Code
-results.append(network.predict(data_point))
-\end_layout
-
-\end_deeper
-\begin_layout LyX-Code
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-\begin_inset CommandInset label
-LatexCommand label
-name "alg:DEnFi_training_algorithm_2"
-
-\end_inset
-
-DEnFi predicting algorithm
+DEnFi active learning training algorithm
 \end_layout
 
 \end_inset
@@ -1321,7 +1388,25 @@ DEnFi predicting algorithm
 \end_layout
 
 \begin_layout Subsubsection*
-Dropout MC:
+Dropout MC: 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+addcontentsline{toc}{subsubsection}{Dropout MC}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1354,7 +1439,25 @@ literal "false"
 \end_layout
 
 \begin_layout Subsubsection*
-SGLD:
+SGLD: 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+addcontentsline{toc}{subsubsection}{SGLD}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1394,7 +1497,25 @@ where 𝐿 is a loss function and 𝜖𝑛 is noise with covariate matrix
 \end_layout
 
 \begin_layout Subsubsection*
-Softmax uncertainty:
+Softmax uncertainty: 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+addcontentsline{toc}{subsubsection}{Softmax uncertainty}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1426,6 +1547,12 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
 \align center
 \begin_inset Graphics
 	filename signle_instance_active_learning_images/evolutions_auc_categories.eps
@@ -1443,12 +1570,7 @@ name "fig:auc_evolution_categories"
 
 \end_inset
 
-Evolution of the mean AUC with growing number of requests for DEnFi, Dropout
- MC warm-start algorithms and six pairs of categories.
- The uncertainty bounds are illustrated as one standard deviation from the
- mean value with respect to 10 runs.
- Both DEnFi and Dropout MC were initially trained on 10 labeled text documents
- before sequential learning strategies were initialized
+Results for six pairs of categories
 \end_layout
 
 \end_inset
@@ -1461,7 +1583,7 @@ Evolution of the mean AUC with growing number of requests for DEnFi, Dropout
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset Float figure
 wide false
 sideways false
@@ -1488,12 +1610,30 @@ name "fig:auc_evolution_embeddings"
 
 \end_inset
 
-Evolution of the mean AUC with growing number of requests for DEnFi, Dropout
- MC warm-start algorithms, two datasets: Fake News (top row) and Fake News
- Detection (bottom row), and three embeddings: Fats Text (left column),
- Laser (middle column) and RoBERTa (right column).
+Results for two datasets: Fake News (top row) and Fake News Detection (bottom
+ row), and three embeddings: Fats Text (left column), Laser (middle column)
+ and RoBERTa (right column)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Evolution of the mean AUC with growing number of requests for DEnFi and
+ Dropout MC warm-start algorithms.
  The uncertainty bounds are illustrated as one standard deviation from the
- mean value calculated with respect to 5 runs.
+ mean value with respect to 10 runs for top figure and 5 runs for bottom
+ figure.
  Both DEnFi and Dropout MC were initially trained on 10 labeled text documents
  before sequential learning strategies were initialized
 \end_layout
@@ -1545,13 +1685,13 @@ literal "false"
 .
  Documents from the News Category dataset were downloaded using links provided
  in the dataset.
- The names of the tested categories are shown in table 3 
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-ADD TABLE
-\end_layout
+ The names of the tested categories are shown in table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:average_AUC_over_categories"
+plural "false"
+caps "false"
+noprefix "false"
 
 \end_inset
 
@@ -1568,7 +1708,7 @@ noprefix "false"
  and in Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "fig:auc_evolution_categories"
+reference "fig:auc_evolution_embeddings"
 plural "false"
 caps "false"
 noprefix "false"
@@ -1646,6 +1786,14 @@ Hyperparameter Tuning
 \end_layout
 
 \begin_layout Standard
+\align center
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
 \begin_inset Float table
 wide false
 sideways false
@@ -1669,6 +1817,26 @@ shadowsize "4pt"
 framecolor "black"
 backgroundcolor "none"
 status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -2711,6 +2879,7 @@ Fast Text
 \end_layout
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Box Frameless
 position "t"
 hor_pos "c"
@@ -2727,7 +2896,7 @@ separation "3pt"
 shadowsize "4pt"
 framecolor "black"
 backgroundcolor "none"
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -3769,30 +3938,27 @@ RoBERTa
 
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
 \begin_layout Plain Layout
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-
-\series bold
 \begin_inset CommandInset label
 LatexCommand label
 name "tab:fast_text_roberta_tech_science"
 
 \end_inset
 
-Fast Text
-\series default
- and 
-\series bold
-RoBERTa
-\series default
- encoding based AUC of text classification after selected number of requests
- of the active learning using DEnFi and Dropout MC warm-start for various
- selection of the perturbation noise 𝑞.
- Average over 10 runs in the Tech vs Science categories.
- The best result is denoted by a star, results within one standard deviation
- of the winner are displayed in bold font.
+Results for Tech vs Science categories
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Labels in text are fucked up
 \end_layout
 
 \end_inset
@@ -3805,7 +3971,13 @@ RoBERTa
 
 \end_layout
 
-\begin_layout Standard
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
 \begin_inset Float table
 wide false
 sideways false
@@ -3829,6 +4001,26 @@ shadowsize "4pt"
 framecolor "black"
 backgroundcolor "none"
 status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -4513,6 +4705,7 @@ Fast Text
 \end_layout
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Box Frameless
 position "t"
 hor_pos "c"
@@ -4529,7 +4722,7 @@ separation "3pt"
 shadowsize "4pt"
 framecolor "black"
 backgroundcolor "none"
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -5213,6 +5406,11 @@ RoBERTa
 
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
 \begin_layout Plain Layout
 \begin_inset Caption Standard
 
@@ -5225,6 +5423,38 @@ name "tab:fast_text_roberta_fake_news"
 
 \end_inset
 
+
+\series default
+Results for Fake and True news categories (Fake News Detection dataset)
+ 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Labels in text are fucked up
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+
+\series bold
 Fast Text
 \series default
  and 
@@ -5232,10 +5462,9 @@ Fast Text
 RoBERTa
 \series default
  encoding based AUC of text classification after selected number of requests
- of the active learning using DEnFi and Dropout warm-start for various selection
- of the perturbation noise q.
- Average over 5 runs on the Fake and True news categories (Fake News Detection
- dataset).
+ of the active learning using DEnFi and Dropout MC warm-start for various
+ selection of the perturbation noise 𝑞.
+ Average over 10 runs for top tables and 5 runs for bottom tables.
  The best result is denoted by a star, results within one standard deviation
  of the winner are displayed in bold font.
 \end_layout
@@ -6159,7 +6388,7 @@ noprefix "false"
 
 \end_inset
 
- and Figure 4 
+ and Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:auc_evolution_sgld"
@@ -6177,7 +6406,7 @@ noprefix "false"
 
 \begin_layout Standard
 Detailed analysis of the DEnFi and Dropout MC strategies is provided in
- figure 
+ Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:auc_evolution_categories"
@@ -6307,7 +6536,1601 @@ Sensitivity of the active learning to the choice of embedding was evaluated
 \end_layout
 
 \begin_layout Part
-Batch Active Learning
+Batch Active Learning 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+The major part of the content in this part was taken from the paper sent
+ to COLING conference.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Supervised learning of classifiers for text classification and sentiment
+ analysis relies on the availability of labels that may be either difficult
+ or expensive to obtain.
+ A standard procedure is to add labels to the training dataset sequentially
+ by querying an annotator until the model reaches a satisfactory performance.
+ Active learning is a process that optimizes unlabeled data records selection
+ for which the knowledge of the label would bring the highest discriminability
+ of the dataset.
+ Batch active learning is a generalization of a single instance active learning
+ by selecting a batch of documents for labeling.
+ This task is much more demanding because plenty of different factors come
+ into consideration (i.
+ e.
+ batch size, batch evaluation, etc.).
+ In this paper, we provide a large scale study by decomposing the existing
+ algorithms into building blocks and systematically comparing meaningful
+ combinations of these blocks with a subsequent evaluation on different
+ text datasets.
+ While each block is known (warm start weights initialization, Dropout MC,
+ entropy sampling, etc.), many of their combinations like Bayesian strategies
+ with agglomerative clustering are first proposed in our paper with excellent
+ performance.
+ Particularly, our extension of the warm start method to batch active learning
+ is among the top performing strategies on all datasets.
+ We studied the effect of this proposal comparing the outcomes of varying
+ distinct factors of an active learning algorithm.
+ Some of these factors include initialization of the algorithm, uncertainty
+ representation, acquisition function, and batch selection strategy.
+ Further, various combinations of these are tested on selected NLP problems
+ with documents encoded using RoBERTa embeddings.
+ Datasets cover context integrity (Gibberish Wackerow), fake news detection
+ (Kaggle Fake News Detection), categorization of short texts by emotional
+ context (Twitter Sentiment140), and sentiment classification (Amazon Reviews).
+ Ultimately, we show that each of the active learning factors has advantages
+ for certain datasets or experimental settings.
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+Supervised learning of classifiers relies on the availability of class labels
+ which often involves a human annotator for a majority of NLP tasks.
+ This can be costly for large datasets.
+ Active learning is a strategy designed to minimize this cost by automatic
+ selection of those unlabeled documents that are expected to bring useful
+ information for the classifier.
+ Advantages of this approach have been demonstrated even for classical methods
+ such as SVM 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "tong2001support"
+literal "false"
+
+\end_inset
+
+.
+ The most conventional active learning strategies select only one unlabeled
+ document after each training round to query due to the simplicity of its
+ selection.
+ The next query document is selected only after the first one is labeled
+ and the model retrained, which means that the annotator has to wait for
+ retraining.
+ This impractical strategy can be avoided if the active learning algorithm
+ selects a batch of documents.
+ Novel methods for batch active learning appear frequently, each demonstrating
+ advantages on their benchmark data.
+ 
+\end_layout
+
+\begin_layout Standard
+Various comparative studies have been performed recently with various focus
+ and results.
+ Batch active learning was studied in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dor2020active"
+literal "false"
+
+\end_inset
+
+ for only one size of the batch (50 documents per query).
+ Large sensitivity to the type of dataset was reported in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "prabhu2021multi"
+literal "false"
+
+\end_inset
+
+, where different methods won for different data.
+ Large variability of the results was also observed in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "jacobs2021active"
+literal "false"
+
+\end_inset
+
+.
+ In 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "schroder2021uncertainty"
+literal "false"
+
+\end_inset
+
+, the min-margin strategy was shown to be competitive with the prediction
+ entropy-based method on a range of embeddings.
+ The comparative studies shared similar properties, such as a fixed network
+ for embeddings (improvement with retraining can be expected 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "margatina2021bayesian"
+literal "false"
+
+\end_inset
+
+ but may be too costly).
+ All studies also assume a cold start, i.e.
+ completely new initialization of the classifier after each round of querying.
+ This is motivated by the fear of overfitting, which was demonstrated in
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "hu2018active"
+literal "false"
+
+\end_inset
+
+ for hot start, i.e.
+ continuation of training of the classifier.
+ A compromise in the form of warm-start, i.e.
+ adding noise to the weights of the previous classifier, was proposed in
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sahan2021active"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+In this contribution, we take a different approach to benchmarking of the
+ batch active learning algorithms.
+ Specifically, we decompose the algorithms into their building blocks: i)
+ the size of the minibatch, ii) acquisition function, iii) representation
+ of uncertainty of the classifier, and iii) initialization of the network.
+ This approach allows us to quantify contribution of each of the building-block
+ and combine them in previously untested versions.
+ This allows us to demonstrate the following contribution:
+\end_layout
+
+\begin_layout Enumerate
+We present an extension of the Hierarchical Agglomerative Clustering (HAC)
+ approach 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "citovsky2021batch"
+literal "false"
+
+\end_inset
+
+ to the Bayesian setting by replacing the min-margin with a Bayesian acquisition
+ function, such as BALD 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "houlsby2011bayesian"
+literal "false"
+
+\end_inset
+
+.
+ This is a novel combination that has not been tested before.
+\end_layout
+
+\begin_layout Enumerate
+We show that performance of various methods is clustered based on particular
+ building blocks of the method.
+ Thus indicating that active learning methods may be tailored for each target
+ application.
+ A good example of Bayesian methods lies in estimating the distribution
+ of neural networks which performed the best on Fake news but showed the
+ same results on other datasets.
+ 
+\end_layout
+
+\begin_layout Enumerate
+In a large scale study we demonstrate that warm start is often beneficial
+ and even simple methods (such as single neural network with entropy acquisition
+) provide results competitive to, or better than, complex active learning
+ schemes.
+ We also show that cold start approaches reach the same or even worse results
+ than the aforementioned warm start techniques.
+ This is encouraging for practitioners that are interested in the methodology.
+ 
+\end_layout
+
+\begin_layout Standard
+The paper is organized as follows.
+ In Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:batch_active-learning_methods"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, we briefly review all tested factors of batch active learning.
+ The experimental setup of the sensitivity study is described in Section
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:experiment_setup"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ and the results are reported in Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:batch_active_learning_results"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Section
+Batch Active Learning Methods 
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:batch_active-learning_methods"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Throughout the paper, we will use the RoBERTa embedding 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "liu2019roberta"
+literal "false"
+
+\end_inset
+
+ to represent documents in the feature space.
+ RoBERTa is a modified BERT transformer model 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "devlin2018bert"
+literal "false"
+
+\end_inset
+
+ that achieved comparable performance to BERT in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "schroder2021uncertainty"
+literal "false"
+
+\end_inset
+
+ and outperformed all other embeddings in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sahan2021active"
+literal "false"
+
+\end_inset
+
+.
+ Representation of the k-th text document 
+\begin_inset Formula $\mathbf{x}_{k}$
+\end_inset
+
+ is calculated as the mean value from sentence embeddings of all sentences
+ in the text.
+\end_layout
+
+\begin_layout Standard
+The aim of document classification is to find a classifier 
+\begin_inset Formula $\hat{\mathbf{y}}=\mathbf{y}(\theta,\mathbf{x})$
+\end_inset
+
+ predicting the class label for each document representation 
+\begin_inset Formula $\mathbf{x}$
+\end_inset
+
+.
+ In a supervised setting, the classifier parameters are found on a training
+ set 
+\begin_inset Formula $\{\mathbf{x}_{k},\mathbf{y}_{k}\}_{k=1}^{K}$
+\end_inset
+
+ by matching the prediction 
+\begin_inset Formula $\mathbf{y}(\theta,\mathbf{x}_{k})$
+\end_inset
+
+ with the provided label 
+\begin_inset Formula $\mathbf{y}_{k}$
+\end_inset
+
+ for each document.
+ We are concerned with binary classification for simplicity, however, an
+ extension to multiclass is straightforward.
+ 
+\end_layout
+
+\begin_layout Standard
+We assume that for the full corpus of text documents 
+\begin_inset Formula $\mathbf{X}$
+\end_inset
+
+, only a small initial set of labels 
+\begin_inset Formula $\mathbf{Y}^{(0)}$
+\end_inset
+
+, is available.
+ The full set 
+\begin_inset Formula $\mathbf{X}$
+\end_inset
+
+ is thus split into the labeled, 
+\begin_inset Formula $\mathbf{X}^{(0)}$
+\end_inset
+
+, and unlabeled parts, 
+\begin_inset Formula $\mathbf{X}_{u}^{(0)}=\mathbf{X}\backslash\mathbf{X}^{(0)}$
+\end_inset
+
+, the training set in the first round is then 
+\begin_inset Formula $\mathbf{X}^{(0)},\mathbf{Y}^{(0)}$
+\end_inset
+
+.
+ Active learning is defined as a sequential extension of the training data
+ set following a simple iterative strategy in Algorithm 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:batch_active-learning_methods"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float algorithm
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\series bold
+Initialize
+\series default
+: set classifier structure 
+\begin_inset Formula $\mathbf{y}=\mathbf{y}(\mathbf{x},\theta),$
+\end_inset
+
+ iteration counter 
+\begin_inset Formula $i=0$
+\end_inset
+
+, initial data 
+\begin_inset Formula $\mathbf{Y}^{(0)},\mathbf{X}^{(0)},\mathbf{X}_{u}^{(0)}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\series bold
+Iterate 
+\series default
+until a stopping condition:
+\end_layout
+
+\begin_layout Enumerate
+Train a classifier parameter 
+\begin_inset Formula $\theta^{(i)}$
+\end_inset
+
+ on 
+\begin_inset Formula $\mathbf{Y}^{(i)},\mathbf{X}^{(i)}$
+\end_inset
+
+, starting from 
+\begin_inset Formula $\theta_{\text{init}}^{(i)}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Compute the value of a label for all documents in the unlabeled dataset,
+ 
+\begin_inset Formula $a_{l}=A(\mathbf{x}_{l},\theta^{(i)}),$
+\end_inset
+
+
+\begin_inset Formula $\forall\mathbf{x}_{l}\in\mathbf{X}_{u}^{(i)}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Select a batch of documents, 
+\begin_inset Formula $\tilde{\mathbf{X}}\subset\mathbf{X},$
+\end_inset
+
+ for labeling using 
+\begin_inset Formula $a_{l}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Query labels 
+\begin_inset Formula $\tilde{\mathbf{y}}$
+\end_inset
+
+ for 
+\begin_inset Formula $\tilde{\mathbf{X}}$
+\end_inset
+
+ and extend the training set 
+\begin_inset Formula $\mathbf{X}^{(i+1)}=\mathbf{X}^{(i)}\cup\tilde{\mathbf{X}},\mathbf{y}^{(i+1)}=\mathbf{y}^{(i)}\cup\tilde{\mathbf{y}},$
+\end_inset
+
+
+\begin_inset Formula $i=i+1$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "alg:batch_active_learning"
+
+\end_inset
+
+General batch active learning 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The general algorithm can be specialized to many variants depending on various
+ factors as specified next.
+ We will introduce several choices labeled by the step in which they appear
+ in Algorithm 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:batch_active-learning_methods"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection*
+
+\series bold
+1a.
+ Uncertainty representation: 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+addcontentsline{toc}{subsubsection}{1a.
+ Uncertainty representation}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The uncertainty can be represented by a maximum likelihood estimate, represented
+ by a single network, or a Bayesian probabilistic estimate, represented
+ typically by an ensemble of networks.
+ We will consider the following options: 
+\series bold
+Single network 
+\series default
+with a softmax output layer predicting the normalized probability of each
+ class in one hot encoding.
+ This probability is conditioned on the parameter, and thus captures only
+ aleatoric uncertainty.
+ Uncertainty in parameters is not represented.
+ 
+\series bold
+Ensemble of networks
+\series default
+, represent uncertainty in parameters by different parameter value in each
+ ensemble thus capturing both aleatoric and epistemic uncertainty.
+ We consider two methods for generating the ensemble members: i) 
+\emph on
+MC dropout 
+\emph default
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "gal2017deep"
+literal "false"
+
+\end_inset
+
+, where ensemble members are generated by random draws of the dropout layers,
+ and ii) 
+\emph on
+deep ensembles 
+\emph default
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "lakshminarayanan2017simple"
+literal "false"
+
+\end_inset
+
+ where ensembles are trained independently.
+ Note that MC dropout is computationally much cheaper.
+\end_layout
+
+\begin_layout Subsubsection*
+
+\series bold
+1b.
+ Initialization of the training: 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+addcontentsline{toc}{subsubsection}{1b.
+ Initialization of the training}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Each training in step 1 is a new task.
+ However, the data set typically overlaps with the one from the previous
+ iteration, which motivates the following strategies of reusing results
+ from the previous iteration.
+ The 
+\series bold
+Cold
+\begin_inset space ~
+\end_inset
+
+start 
+\series default
+strategy is not reusing any information, the networks are initialized by
+ random numbers, 
+\begin_inset Formula $\theta_{\text{init}}^{(i)}=\mathcal{N}(0,\sigma)$
+\end_inset
+
+, where 
+\begin_inset Formula $\sigma$
+\end_inset
+
+ is given by the standard network init strategy, used most often 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dor2020active,citovsky2021batch,schroder2021uncertainty"
+literal "false"
+
+\end_inset
+
+.
+ The
+\series bold
+ Hot
+\begin_inset space ~
+\end_inset
+
+start 
+\series default
+strategy reuses all information, setting the estimate from the previous
+ iteration as a starting point, 
+\begin_inset Formula $\theta_{\text{init}}^{(i)}=\theta^{(i-1)},$
+\end_inset
+
+criticized in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "hu2018active"
+literal "false"
+
+\end_inset
+
+.
+ The 
+\series bold
+Warm
+\series default
+
+\begin_inset space ~
+\end_inset
+
+
+\series bold
+start
+\series default
+ strategy a combination of the above, 
+\begin_inset Formula $\theta_{\text{init}}^{(i)}=\theta^{(i-1)}+\mathcal{N}(0,\sigma),$
+\end_inset
+
+ where 
+\begin_inset Formula $\sigma$
+\end_inset
+
+ is a hyper-parameter 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sahan2021active"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection*
+
+\series bold
+2.
+ Acquisition function: 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+addcontentsline{toc}{subsubsection}{2.
+ Acquisition function}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Is a measure of the expected utility of the knowledge label, 
+\begin_inset Formula $\boldsymbol{y}_{l}$
+\end_inset
+
+, for each document, 
+\begin_inset Formula $\boldsymbol{x}_{l}$
+\end_inset
+
+, in the unlabeled data set.
+ Different running index 
+\begin_inset Formula $l$
+\end_inset
+
+ is used to indicate that we operate on the unlabeled set.
+ While many different utilities are proposed, we will study only the most
+ popular ones.
+ 
+\series bold
+Entropy 
+\series default
+exists in two forms, entropy of the prediction 
+\begin_inset Formula $a_{l}=\mathbb{H}(y|\mathbf{x}_{l},\theta)$
+\end_inset
+
+ for a single network, or expected entropy 
+\begin_inset Formula $a_{l}=\mathbb{E}_{\theta}\mathbb{H}(y|\mathbf{x}_{l},\theta)$
+\end_inset
+
+ for ensembles.
+ 
+\series bold
+BALD 
+\series default
+is a mutual information metric, 
+\begin_inset Formula $a_{l}=\mathbb{E}_{\theta}\mathbb{H}(y|\mathbf{x}_{l},\theta)-\mathbb{H}(y|\mathbf{x}_{l})$
+\end_inset
+
+ that is meaningful only for the ensembles.
+ 
+\series bold
+Min-margin 
+\series default
+is a minimum difference between class predictions 
+\begin_inset Formula $a_{l}=-\min_{c,d\in[1,C]}(y_{c}-y_{d})$
+\end_inset
+
+, where 
+\begin_inset Formula $C$
+\end_inset
+
+ is the number of classes.
+ Note carefully that the extreme of this criteria is equivalent to maximum
+ entropy for binary classification with a single network.
+\end_layout
+
+\begin_layout Subsubsection*
+
+\series bold
+3.
+ Batch selection strategy: 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+addcontentsline{toc}{subsubsection}{3.
+ Batch selection strategy}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+When only one sample is to be selected, it is optimal to choose the one
+ with maximum utility given by the acquisition function.
+ However, the complexity of the maximum utility grows exponentially when
+ the strategy has to select a batch of 
+\begin_inset Formula $b$
+\end_inset
+
+ documents for off-line labeling.
+ Strategies that try to approximate this selection using greedy search 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "kirsch2019batchbald"
+literal "false"
+
+\end_inset
+
+ are still too computationally expensive for large batches.
+ Therefore, we select two batch selection strategies that scale well with
+ 
+\begin_inset Formula $b$
+\end_inset
+
+.
+ 
+\series bold
+Top 
+\series default
+selects top 
+\begin_inset Formula $b$
+\end_inset
+
+ samples from sorted values of 
+\begin_inset Formula $a_{l}.$
+\end_inset
+
+ This approach may select samples close to each other, thus being redundant.
+ 
+\series bold
+HAC
+\series default
+ is a strategy based on the hierarchical clustering of 
+\begin_inset Formula $a_{l}$
+\end_inset
+
+ proposed in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "citovsky2021batch"
+literal "false"
+
+\end_inset
+
+, and selecting top 
+\begin_inset Formula $b$
+\end_inset
+
+ samples from different clusters.
+\end_layout
+
+\begin_layout Subsubsection*
+Tested algorithm variants:
+\end_layout
+
+\begin_layout Standard
+From the range of all possibilities, we will study the combinations that
+ exist in the literature: HAC min-margin using cold start 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "citovsky2021batch"
+literal "false"
+
+\end_inset
+
+, MC dropout with Entropy and BALD criteria using warm start 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "gal2017deep"
+literal "false"
+
+\end_inset
+
+, warm start ensemble learning with Entropy and BALD called DEnFi 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sahan2021active"
+literal "false"
+
+\end_inset
+
+, and conventional single-network with prediction Entropy a with warm start.
+ If HAC is not in the name, the Top strategy is used.
+\end_layout
+
+\begin_layout Standard
+Since HAC strategy is an orthogonal factor to the remaining ones, we propose
+ its combination with other approaches, giving rise to: HAC Entropy for
+ the single neural network and both ensemble methods (MC dropout and DEnFi)
+ and HAC BALD for the ensembles.
+\end_layout
+
+\begin_layout Section
+Experiment Setup 
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:experiment_setup"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide true
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../Peony/Peony_article/batch_active_learning_for_text_classification_itnlp/images/1000_req_AUC_for_different_batches_2_datasets.eps
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:AUC-metrics-for"
+
+\end_inset
+
+AUC metrics for seven active learning and two random strategies after 1000
+ acquired samples given datasets and batch size.
+ Prediction of the MC dropout classifiers is an average over ensemble members.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide true
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../Peony/Peony_article/batch_active_learning_for_text_classification/images/batch_active_learning_plots.eps
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Evolution-of-active-learning-run"
+
+\end_inset
+
+Evolution of the mean AUC with a growing number of requests for the best
+ algorithms representative vs HAC Min-margin given the batch size and dataset.
+ The uncertainty bounds are illustrated as one standard deviation from the
+ mean value with respect to 5 runs.
+ All algorithms were initially trained on 10 labeled text documents before
+ sequential learning strategies were initialized
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../Peony/Peony_article/batch_active_learning_for_text_classification_itnlp/images/Aggregated_mean_rank_given_datasets_w_denfi_cold_start.eps
+	width 60col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Aggregated-mean-rank"
+
+\end_inset
+
+Aggregated mean rank for 14 tuples of learning algorithms and acquisition
+ functions given Amazon Reviews 3,5, Fake News Detection, and Twitter Sentiment
+ for 50 active learning iterations with batch size 20.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The methods were compared on different datasets and different batch sizes.
+ The used datasets are positive/negative tweets from the Tweets 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "go2009twitter"
+literal "false"
+
+\end_inset
+
+, Fake News Detection 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "fake_news_detection"
+literal "false"
+
+\end_inset
+
+, two pairs of categories from Amazon Reviews 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "keung2020multilingual"
+literal "false"
+
+\end_inset
+
+, and Gibberish 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Gibberish_dataset"
+literal "false"
+
+\end_inset
+
+ datasets.
+ From all datasets, we select from 
+\begin_inset Formula $10000$
+\end_inset
+
+ text documents (
+\begin_inset Formula $5000$
+\end_inset
+
+ text documents per category, selecting only two categories for binary classific
+ation, e.g.
+ 1 and 5 in Amazon reviews), which were the initial 
+\begin_inset Formula $10000$
+\end_inset
+
+ documents of the datasets given categories.
+ The only exception is Fake News Detection where only 4000 documents are
+ available (2000 text documents per category).
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Experiment Parameters:
+\end_layout
+
+\begin_layout Standard
+Each active learning experiment was initialized by the training set 
+\begin_inset Formula $\mathbf{X}^{(0)},\mathbf{Y}^{(0)}$
+\end_inset
+
+ of 
+\begin_inset Formula $10$
+\end_inset
+
+ samples.
+ The active learning strategy was set to sample 
+\begin_inset Formula $b$
+\end_inset
+
+ samples with a discrete set of variants, 
+\begin_inset Formula $b=10,20,50,100$
+\end_inset
+
+.
+ The active learning was run until 1000 samples were labeled, i.e.
+ making a different number of steps for each batch size (10 iterations for
+ 
+\begin_inset Formula $b=100$
+\end_inset
+
+, 20 for 
+\begin_inset Formula $b=50$
+\end_inset
+
+, etc.).
+ The batch selection follows the 𝜖 -greedy approach 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "watkins1989learning"
+literal "false"
+
+\end_inset
+
+, i.e.
+ the samples selected by the acquisition function are accepted with probability
+ 
+\begin_inset Formula $𝜖=\frac{\exp(l-3)}{\exp(l-3)+1}$
+\end_inset
+
+.
+ A batch of random documents is selected for labeling if not accepted.
+ The AUC is evaluated on the remaining part of the selected dataset (i.e.
+ on the 9990 text documents in the first evaluation).
+ The reported AUC values are averaged over 
+\begin_inset Formula $5$
+\end_inset
+
+ independent runs.
+ 
+\end_layout
+
+\begin_layout Standard
+The initial number of epochs for the first iteration is 2500 for all algorithms.
+ The same number is used for the cold start strategy in each iteration.
+ The training of the warm start strategies is run for 150 epochs, with weights
+ perturbation noise of variance 
+\begin_inset Formula $\sigma=0.3$
+\end_inset
+
+ for both MC dropout and DEnFi.
+ Both DEnFi and MC Dropout generate 5 ensemble members.
+ The key difference is in computational complexity, while DEnFi has to tune
+ the parameters for each ensemble member, the MC dropout does it for only
+ one network and generated ensemble members by 5 different realizations
+ of the dropout mask.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Evaluation:
+\end_layout
+
+\begin_layout Standard
+All algorithms were compared on the area under the curve (AUC) 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "fawcett2006introduction"
+literal "false"
+
+\end_inset
+
+ on the test data (i.e.
+ the documents not present in the training set).
+ The algorithms were compared after 1000 acquired labels.
+ The algorithms with smaller batch sizes thus benefited the from higher
+ number of retrainings.
+ To reduce the influence of stochastic initialization and training, the
+ AUCs were run 5 times and averaged.
+ Even then, the difference between the algorithms was sometimes marginal.
+ To show the effect of various factors on the performance, we sorted the
+ AUC and assigned a rank of each method accordingly.
+ I.e.
+ the best performing method has rank 1, second rank 2, etc.
+ This approach allows the comparison of various methods across multiple
+ datasets 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "demvsar2006statistical"
+literal "false"
+
+\end_inset
+
+ using order statistics.
+ 
+\end_layout
+
+\begin_layout Section
+Results 
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:batch_active_learning_results"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Parameter uncertainty:
+\series default
+ 
+\begin_inset Float figure
+wide true
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../../Peony/Peony_article/batch_active_learning_for_text_classification_itnlp/images/Aggregated_mean_rank_given_datasets_subplots_cold_start.eps
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Aggregated rank for 7 active learning algorithms and two random strategies
+ averaged over datasets as a function of different batch sizes.
+ 
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Aggregated-mean-rank-1"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+The effect of parameter uncertainty (Bayesian approach) is the most costly
+ to evaluate, due to the high computational demand of the ensemble approach
+ (DEnFi).
+ Therefore, we have evaluated all algorithm variants only for batch size
+ 
+\begin_inset Formula $b=20$
+\end_inset
+
+.
+ The results are displayed in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Aggregated-mean-rank"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ The advantage of the Bayesian approach is evident only for the Fake News
+ dataset.
+ This behavior is a result of a good neural network parameters distribution
+ estimate.
+ However, in other datasets, DEnFi performed as good as a single neural
+ network, and is not worth the computational cost.
+ As a result, the algorithm was omitted from subsequent large-scale studies.
+ 
+\end_layout
+
+\begin_layout Standard
+A summary of the performance of all tested methods for various batch sizes
+ is displayed in Figure
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:AUC-metrics-for"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ via AUC after 1000 samples for all methods, and via relative rank for all
+ methods in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Aggregated-mean-rank-1"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ averaged over ranks after each 100 label requests.
+ Note that the datasets follow a similar pattern, with the exception of
+ the Fake News data sets, where the parametric uncertainty (now represented
+ only by the warm start MC dropout strategy) is beneficial, and HAC batch
+ selection strategy has a negative effect (probably due to preference of
+ large clusters).
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Acquisition functions: 
+\series default
+Due to binary classification, the min-margin and entropy approaches coincide
+ for a single network function.
+ The difference between our generalization of Entropy and BALD methods for
+ the ensemble techniques seems insignificant, Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Aggregated-mean-rank-1"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ HAC methods perform well for some cases, but a simple entropy approach
+ shows more stable results for the majority of problems, batch sizes, and
+ initializations.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Initialization of the training: 
+\series default
+The proposed modification on warm start strategies (HAC Entropy, NN Entropy,
+ and NN Random warm start) are better or comparable in performance to the
+ cold start (HAC Min-margin, NN Entropy, NN Random); this is achieved at
+ a fraction of the training cost.
+ This indicates that the additive noise is sufficient to avoid overfitting
+ of the hot start 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "hu2018active"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Batch selection strategy: 
+\series default
+The HAC batch selection has a clear advantage for smaller batch sizes (10
+ and 20).
+ This is consistent when comparing HAC and Top variants of all methods except
+ Fake News Detection.
+ Smaller batch sizes and the proposed generalization to warm start HAC outperfor
+ms the cold start approach in most of cases.
+ The batch advantage diminishes for sizes of 50 and 100 where the top selection
+ strategy achieves comparable (ensembles) or better (single NN) results.
+ We project that the most informative samples in our datasets are clustered
+ in small groups, hence the selection of a batch with a large enough size
+ contains all important samples.
+ 
+\end_layout
+
+\begin_layout Standard
+The contribution of this paper lies in a comparative study where we decomposed
+ different algorithms into building blocks and generalized various approaches.
+ For a better understanding of the methodology, we selected some approaches
+ for demonstration.
+ In Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Evolution-of-active-learning-run"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ a comparison of various active learning sequences is displayed.
+ More specifically, the methods proposed by us to well studied HAC min-margin
+ approach.
+ 
+\end_layout
+
+\begin_layout Section
+Conclusion
+\end_layout
+
+\begin_layout Standard
+We have studied the influence of various factors (i.
+ e.
+ acquisition functions, batch sizes, neural networks initialization) of
+ active learning algorithms and their performance on cover context integrity,
+ fake news detection, and sentiment classification tasks.
+ While complex algorithms such as deep ensembles (DEnFi and Dropout MC)
+ sometimes achieve good performance (Fake News detection), the winner, on
+ average, is the classical prediction entropy of a single neural network
+ with a few proposed modifications like warm start.
+ Although the performance of the warm start method can sometimes be the
+ same assume the cold start, the undeniable benefit is a lower computational
+ cost.
+ The selection of the batch size for annotation is also important.
+ The agglomerative clustering improves performance for smaller batch sizes
+ and may show better results than a more general method like entropy sampling.
+ 
+\end_layout
+
+\begin_layout Part
+Coreference Resolution
+\end_layout
+
+\begin_layout Standard
+The grand research from Google [OFR+19] shows that the point-wise estimate
+ of model parameters does not usually result in an optimal approach.
+ The models uncertainty measurement through the estimate of the empirical
+ model weights distribution has already shown remarkable results in the
+ active learning fields both in Computer Vision [GIG17], and NLP in such
+ tasks like NER [SYL+17, LLW18], text classification [AWH18] and other applicati
+ons.
+ We aim to utilize the knowledge of extended uncertainty algorithms throughout
+ single/multi instances learning, hot/warm/cold start training and adapt
+ it to the CR problem to improve the existing framework.
+\end_layout
+
+\begin_layout Section
+State-of-The-Art
+\end_layout
+
+\begin_layout Standard
+Modern Coreference Resolution (CR) algorithms are combinations of sophisticated
+ vector embeddings representing context and deep neural network superstructures
+ that perform the coreference resolution itself.
+ The set of existing models for natural language understanding (NLU) is
+ vast.
+ Arguably, one of the most prominent points in the history of such models
+ is when the continuous bag-of-words and skipgram approaches were introduced
+ [MCCD13].
+ At that point, machines started to learn the context surrounding particular
+ words.
+ Their vector representations acquired the ability to represent this context,
+ meaning proximity of such vectors in terms of a metric of choice (L2, cosine/an
+gular similarity) veritably described similarity of words or contexts.
+ Still, models of these types were far from perfect, as they provided one
+ with constant vectors per word for a pre-set vocabulary.
+ Context-dependent representations with flexible vocabularies became available
+ thanks to the introduction of the Transformer architecture [VSP+17] applied
+ to the vocabulary formed not only by words but also by character ngrams
+ constructed as meaningful parts of words.
+ The power of the Transformer architecture lies in its encoding and decoding
+ capability, improved by the self-attention mechanism, which learns to put
+ stress on parts of text sequences.
+ This gave birth to a lot of transformer-based language models such as the
+ Bidirectional Encoder Representations from Transformers (BERT) [DCLT19],
+ its fine-tuned variations [LCG+20, LOG+19] and further models [RN18, CYK+18].
+ To this date, SpanBERT [JCL+19] has proven to be one of the most efficient
+ architectures for coreference resolution.
+ Its crucial difference from the standard BERT model is that it learns to
+ predict the content of masked spans of text, taking into account their
+ beginnings and endings, omitting the ability of the base BERT model to
+ predict pre- ceding sentences.
+ In contrast, BERT learns to predict the following sentence for each preceding
+ one and attempts to infer individual masked tokens.
+ Another model worthy of mention is a Longformer, whose architecture is
+ based on transformers capable of processing long documents up to 4096 tokens
+ [BPC20].
+ The first end-to-end coreference resolution model was introduced in [LHLZ17].
+ Its crucial difference from its predecessors was that it did not require
+ preprocessing in the form of syntactic parsing or rule-based mention detection
+ since the model can learn mention dependencies on its own to a forerunner-
+ outperforming extent.
+ The main idea of the model is to learn to score pairs of textual spans
+ in such a way that takes into account, firstly, if these spans are entity
+ mentions and, secondly, whether the pair is of type antecedent-descendant
+ in terms of coreference.
+ The NLU model of choice provides span represen- tations.
+ The goal is to assign to each span an antecedent span.
+ [JCL+19] belongs to the state-of-the-art approaches which utilize the same
+ structure on top of SpanBERT.
+ One of the crucial drawbacks of the scoring approach is the choice of spans:
+ sizes of relevant spans can be different, so a constant width of the window
+ may not always be the right choice; spans can either overlap or be disjoint;
+ if they over- lap, the value of the overlap also becomes a hyperparameter.
+ In addition to that, the number of scoring procedures is quadratic in complexit
+y: each span has to be scored against every its counterpart.
+ If the length of the document is large, the memory needed to store all
+ entity mentions may become an issue (in [XSD20] authors propose an incremental
+ structure for the CR model, which needs a lot less memory for the price
+ of a slight decrease in performance).
+ While previous models are able to achieve decent results, their memory
+ footprint is significant.
+ The authors of [KRL21] bypassed the need to create span representations,
+ relying on a combination of bilinear functions applied on endpoint token
+ representations.
+ In addition to that, the new model is built on top of a Longformer encoder
+ capable of processing long documents.
+\end_layout
+
+\begin_layout Standard
+For languages other than English, the state of art for the CR is arguably
+ even farther behind.
+ For example, coreference resolution for Czech was attempted on the PCEDT
+ dataset [HHP+12] in [Nov17].
+ However, the overall performance of the approach did not reach the mark
+ of 0.7 in terms of F-score (whereas English models show more than 0.8 F1
+ score).
+ In addition to that, no transformer-based NLU model was available at the
+ time.
+\end_layout
+
+\begin_layout Section
+CR Meets Uncertainty
+\end_layout
+
+\begin_layout Standard
+Integration of the uncertainty representations algorithms e.g deep ensembles
+ [LPB16], MC Dropout [GIG17], SGLD [WT11] or Vadam [KNT+18] to the coreference
+ resolution superstructure for the empirical model weights distribution
+ estimate.
+ The beforehand mentioned integration will result in more efficient learning
+ and inference procedures.
+ The primary investigation is concentrated around faster model learning
+ (hot and warm start methods) with a lower number of training data, given
+ the model pre- diction uncertainty [SSM21].
+ The diversity of embedding-based superstructure model architec- tures makes
+ the models’ uncertainty prediction slow and inefficient.
+ The further step in the uncer- tainty estimate research is a generalization
+ of the uncertainty given different models architectures (e.g., Vadam [KNT+18]).
+ The output of the study will allow us to use the architecture agnostic
+ empirical model weights distribution estimate for better noise measurement,
+ faster learning, and label distribution prediction, specifically for different
+ types of CR task embedding superstructure.
+\end_layout
+
+\begin_layout Section
+Conclusion
+\end_layout
+
+\begin_layout Standard
+We expect to define new methods for solving coreference resolution with
+ better performance applicable to texts in English and supporting Czech.
+ We believe that the outlined strategy using uncertainty representation
+ and representation of structural entities will significantly enhance the
+ performance of CR.
+ Each year, we expect to deliver a conference paper (conferences dedicated
+ to NLP such as ACL, COLING, NeurIPS, CoNLL, ICML, ICDM).
+ However, the main focus will be given to three impact factor journal papers
+ delivered in the second and third years (e.g., Transactions of the Association
+ for Computational Linguistics, Journal of Computational Linguistics, Journal
+ of Information Retrieval, Journal of Machine Learning).
 \end_layout
 
 \begin_layout Standard
