@@ -309,43 +309,35 @@ The generalized aim of Natural Language Processing (NLP) is a decision making
  spotlight attention of the commercial sector and many scientists and also
  to the immense investment and improvements in computational power.
  The current list of NLP tasks includes but is not limited to such problems
- like: topic classification
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-ref
-\end_layout
+ like: topic classification 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "wang2012baselines"
+literal "false"
 
 \end_inset
 
-, machine translation
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-ref
-\end_layout
+, machine translation 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "somers1992introduction"
+literal "false"
 
 \end_inset
 
-, named entity recognition
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-ref
-\end_layout
+, named entity recognition 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "wang2020automated"
+literal "false"
 
 \end_inset
 
-, language modeling
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-ref
-\end_layout
+, language modeling 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "smith2022using"
+literal "false"
 
 \end_inset
 
@@ -361,26 +353,22 @@ ref
 
 , etc..
  Astonishingly, a vast amount of task-specific solutions show almost human-like
- semantic understanding
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Question answering ref
-\end_layout
+ semantic understanding 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "thoppilan2022lamda"
+literal "false"
 
 \end_inset
 
  that brought even more attention to the field.
  The increased research activity resulted in a brain gain and a strong push
  of the boundaries in a majority of NLP problems, i.e representing language
- in a vector space
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Attention, etc.
-\end_layout
+ in a vector space 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "vaswani2017attention"
+literal "false"
 
 \end_inset
 
@@ -396,26 +384,22 @@ the more parameters, the better
 
 , made the retraining more complicated and costly.
  However, the innovative fine tuning approaches present efficient solutions
- for the problem of the full retraining paradigm
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Ref
-\end_layout
+ for the problem of the full retraining paradigm 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sahan2021active"
+literal "false"
 
 \end_inset
 
 .
  The non arguable outcome of these improvements is an increase in the number
  of training instances i.e language models are usually trained with billions
- of text data
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-60 billion articles dataset ref
-\end_layout
+ of text data 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "floridi2020gpt"
+literal "false"
 
 \end_inset
 
@@ -429,13 +413,11 @@ Our research contribution lies in optimal models learning both from scratch
  The training data collection is a highly time consuming and complicated
  procedure.
  In terms of supervised learning, the target labels acquisition is sometimes
- exceedingly expensive, e.g legal documents relevancy labeling
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-ref
-\end_layout
+ exceedingly expensive, e.g legal documents relevancy labeling 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "schweighofer2001automatic"
+literal "false"
 
 \end_inset
 
@@ -444,37 +426,8 @@ ref
  and present its functionality regarding one of the most complex problems
  - coreference resolution.
  We simultaneously explore various correlated sectors such as i) active
- learning
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-ref
-\end_layout
-
-\end_inset
-
-, ii) models' uncertainty representation
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-ref
-\end_layout
-
-\end_inset
-
- and iii) coreference resolution
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-ref
-\end_layout
-
-\end_inset
-
-.
+ learning, ii) models' uncertainty representation and iii) coreference resolutio
+n.
  The topics of 
 \shape italic
 active learning
@@ -485,13 +438,11 @@ models uncertainty representation
 \shape default
  are codependent.
  We propose a more granular study and extension of the human-machine communicati
-on
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-ref
-\end_layout
+on 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "thoppilan2022lamda"
+literal "false"
 
 \end_inset
 
@@ -505,55 +456,45 @@ ref
  The following task is formulated as a supervised learning technique trained
  with the data obtained by the sequential labels querying from a human expert.
  This branch of research involves integration of enhanced models uncertainty
- measurement algorithms e.g deep ensembles
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-[LPB16]
-\end_layout
+ measurement algorithms e.g deep ensembles 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "lakshminarayanan2016simple"
+literal "false"
 
 \end_inset
 
-, MC Dropout
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-[GIG17]
-\end_layout
+, MC Dropout 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "gal2017deep"
+literal "false"
 
 \end_inset
 
-, SGLD
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-[WT11]
-\end_layout
+, SGLD 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "welling2011bayesian"
+literal "false"
 
 \end_inset
 
- or Vadam
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-[KNT+18]
-\end_layout
+ or Vadam 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "khan2018fast"
+literal "false"
 
 \end_inset
 
  to the NLP problem for the empirical model weights distribution estimate.
  The additional information, given the distribution of predicted labels
- and the model prediction uncertainty
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-[SSM21]
-\end_layout
+ and the model prediction uncertainty 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sahan2021active"
+literal "false"
 
 \end_inset
 
@@ -568,13 +509,11 @@ based uncertainty.
  The uncertainty representation approach provides the model with an expanded
  vision of both model learning and inference.
  The described technique has shown that such algorithms may enhance the
- learning process significantly
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-[OFR+19]
-\end_layout
+ learning process significantly 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ovadia2019can"
+literal "false"
 
 \end_inset
 
@@ -617,13 +556,11 @@ An exemplary use case where coreference resolution can be applied is categorizin
 g entities and their pronouns to provide one with a broader spectrum of
  information for future decision making.
  Based on the extracted data, it is possible to unify all knowledge in the
- form of a Knowledge Graph (KG)
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-[WMWG17]
-\end_layout
+ form of a Knowledge Graph (KG) 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "kg-Wang2017"
+literal "false"
 
 \end_inset
 
@@ -6616,21 +6553,13 @@ The major part of the content in this part was taken from the paper sent
 \end_layout
 
 \begin_layout Standard
-Supervised learning of classifiers for text classification and sentiment
- analysis relies on the availability of labels that may be either difficult
- or expensive to obtain.
- A standard procedure is to add labels to the training dataset sequentially
- by querying an annotator until the model reaches a satisfactory performance.
- Active learning is a process that optimizes unlabeled data records selection
- for which the knowledge of the label would bring the highest discriminability
- of the dataset.
- Batch active learning is a generalization of a single instance active learning
+Batch active learning is a generalization of a single instance active learning
  by selecting a batch of documents for labeling.
  This task is much more demanding because plenty of different factors come
  into consideration (i.
  e.
  batch size, batch evaluation, etc.).
- In this paper, we provide a large scale study by decomposing the existing
+ In this part, we provide a large scale study by decomposing the existing
  algorithms into building blocks and systematically comparing meaningful
  combinations of these blocks with a subsequent evaluation on different
  text datasets.
@@ -8055,49 +7984,116 @@ Coreference Resolution
 \end_layout
 
 \begin_layout Standard
-The grand research from Google [OFR+19] shows that the point-wise estimate
- of model parameters does not usually result in an optimal approach.
- The models uncertainty measure- ment through the estimate of the empirical
+The grand research from Google 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ovadia2019can"
+literal "false"
+
+\end_inset
+
+ shows that the point-wise estimate of model parameters does not usually
+ result in an optimal approach.
+ The models uncertainty measurement through the estimate of the empirical
  model weights distribution has already shown remarkable results in the
- active learning fields both in Computer Vision [GIG17], and NLP in such
- tasks like NER [SYL+17, LLW18], text classification [AWH18] and other applicati
-ons.
- We aim to utilize the knowledge of these fields as mentioned above and
- adapt it to the CR problem
+ active learning fields both in Computer Vision 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "gal2017deep"
+literal "false"
+
+\end_inset
+
+, and NLP in such tasks like NER 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "shen2017deep"
+literal "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "lowell2019practical"
+literal "false"
+
+\end_inset
+
+, text classification 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "an2018deep"
+literal "false"
+
+\end_inset
+
+ and other applications.
+ We aim to utilize the knowledge of extended uncertainty algorithms throughout
+ single/multi instances learning, hot/warm/cold start training and adapt
+ it to the CR problem to improve the existing framework.
 \end_layout
 
 \begin_layout Section
-State of The Art
+State-of-The-Art
 \end_layout
 
 \begin_layout Standard
 Modern Coreference Resolution (CR) algorithms are combinations of sophisticated
- vector embed- dings representing context and deep neural network superstructure
-s that perform the coreference reso- lution itself.
+ vector embeddings representing context and deep neural network superstructures
+ that perform the coreference resolution itself.
  The set of existing models for natural language understanding (NLU) is
  vast.
  Arguably, one of the most prominent points in the history of such models
- is when the continuous bag-of-words and skip- gram approaches were introduced
- [MCCD13].
+ is when the continuous bag-of-words and skipgram approaches were introduced
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "mikolov2013efficient"
+literal "false"
+
+\end_inset
+
+.
  At that point, machines started to learn the context surrounding particular
  words.
- Their vector representations acquired the ability to represent this con-
- text, meaning proximity of such vectors in terms of a metric of choice
- (L2, cosine/angular similarity) veritably described similarity of words
- or contexts.
+ Their vector representations acquired the ability to represent this context,
+ meaning proximity of such vectors in terms of a metric of choice (L2, cosine/an
+gular similarity) veritably described similarity of words or contexts.
  Still, models of these types were far from perfect, as they provided one
  with constant vectors per word for a pre-set vocabulary.
- Context-dependent rep- resentations with flexible vocabularies became available
- thanks to the introduction of the Transformer architecture [VSP+17] applied
- to the vocabulary formed not only by words but also by character n- grams
- constructed as meaningful parts of words.
+ Context-dependent representations with flexible vocabularies became available
+ thanks to the introduction of the Transformer architecture 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "vaswani2017attention"
+literal "false"
+
+\end_inset
+
+ applied to the vocabulary formed not only by words but also by character
+ ngrams constructed as meaningful parts of words.
  The power of the Transformer architecture lies in its encoding and decoding
  capability, improved by the self-attention mechanism, which learns to put
  stress on parts of text sequences.
  This gave birth to a lot of transformer-based language models such as the
- Bidirectional Encoder Representations from Transformers (BERT) [DCLT19],
- its fine-tuned vari- ations [LCG+20, LOG+19] and further models [RN18,
- CYK+18].
+ Bidirectional Encoder Representations from Transformers (BERT) 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "devlin2018bert"
+literal "false"
+
+\end_inset
+
+, its fine-tuned variations 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "albert-Lan2020"
+literal "false"
+
+\end_inset
+
+, LOG+19] and further models [RN18, CYK+18].
  To this date, SpanBERT [JCL+19] has proven to be one of the most efficient
  architectures for coreference resolution.
  Its crucial difference from the standard BERT model is that it learns to
@@ -8110,7 +8106,7 @@ s that perform the coreference reso- lution itself.
  based on transformers capable of processing long documents up to 4096 tokens
  [BPC20].
  The first end-to-end coreference resolution model was introduced in [LHLZ17].
- Its crucial differ- ence from its predecessors was that it did not require
+ Its crucial difference from its predecessors was that it did not require
  preprocessing in the form of syntactic parsing or rule-based mention detection
  since the model can learn mention dependencies on its own to a forerunner-
  outperforming extent.
@@ -8136,13 +8132,124 @@ y: each span has to be scored against every its counterpart.
  footprint is significant.
  The authors of [KRL21] bypassed the need to create span representations,
  relying on a combination of bilinear functions applied on endpoint token
- representa- tions.
+ representations.
  In addition to that, the new model is built on top of a Longformer encoder
  capable of processing long documents.
 \end_layout
 
+\begin_layout Standard
+For languages other than English, the state of art for the CR is arguably
+ even farther behind.
+ For example, coreference resolution for Czech was attempted on the PCEDT
+ dataset [HHP+12] in [Nov17].
+ However, the overall performance of the approach did not reach the mark
+ of 0.7 in terms of F-score (whereas English models show more than 0.8 F1
+ score 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Ref
+\end_layout
+
+\end_inset
+
+).
+ In addition to that, no transformer-based NLU model was available at the
+ time.
+\end_layout
+
 \begin_layout Section
 CR Meets Uncertainty
+\end_layout
+
+\begin_layout Standard
+Integration of the uncertainty representations algorithms e.g deep ensembles
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "lakshminarayanan2016simple"
+literal "false"
+
+\end_inset
+
+, MC Dropout 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "gal2017deep"
+literal "false"
+
+\end_inset
+
+, SGLD 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "welling2011bayesian"
+literal "false"
+
+\end_inset
+
+ or Vadam 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "khan2018fast"
+literal "false"
+
+\end_inset
+
+ to the coreference resolution superstructure for the empirical model weights
+ distribution estimate.
+ The beforehand mentioned integration will result in more efficient learning
+ and inference procedures.
+ The primary investigation is concentrated around faster model learning
+ (hot and warm start methods) with a lower number of training data, given
+ the model prediction uncertainty 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sahan2021active"
+literal "false"
+
+\end_inset
+
+.
+ The diversity of embedding-based superstructure model architectures makes
+ the models’ uncertainty prediction slow and inefficient.
+ The further step in the uncertainty estimate research is a generalization
+ of the uncertainty given different models architectures (e.g., Vadam 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "khan2018fast"
+literal "false"
+
+\end_inset
+
+).
+ The output of the study will allow us to use the architecture agnostic
+ empirical model weights distribution estimate for better noise measurement,
+ faster learning, and label distribution prediction, specifically for different
+ types of CR task embedding superstructure.
+\end_layout
+
+\begin_layout Section
+Conclusion
+\end_layout
+
+\begin_layout Standard
+We expect to define new methods for solving coreference resolution with
+ better performance applicable to texts in English and supporting Czech.
+ We believe that the outlined strategy using uncertainty representation
+ will significantly enhance both the performance and learning process of
+ CR.
+ 
+\end_layout
+
+\begin_layout Standard
+Each year, we expect to deliver a conference paper (conferences dedicated
+ to NLP such as ACL, COLING, NeurIPS, CoNLL, ICML, ICDM).
+ However, the main focus will be given to three impact factor journal papers
+ delivered in the second and third years (e.g., Transactions of the Association
+ for Computational Linguistics, Journal of Computational Linguistics, Journal
+ of Information Retrieval, Journal of Machine Learning).
 \end_layout
 
 \begin_layout Standard

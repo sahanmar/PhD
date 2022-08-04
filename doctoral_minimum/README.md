@@ -1,8 +1,8 @@
 TODOs:
 
-write conclution
+Read new state of art CR article and add it to CR part. And Kirstan from 2021
 
-Sync the beginnings ((a.k.a article abstracts) for single instance and batch active learning parts
+Add citations to CR part
 
 Regenerate Fig 8 with Requests instead of learning iterations
 

@@ -6553,21 +6553,13 @@ The major part of the content in this part was taken from the paper sent
 \end_layout
 
 \begin_layout Standard
-Supervised learning of classifiers for text classification and sentiment
- analysis relies on the availability of labels that may be either difficult
- or expensive to obtain.
- A standard procedure is to add labels to the training dataset sequentially
- by querying an annotator until the model reaches a satisfactory performance.
- Active learning is a process that optimizes unlabeled data records selection
- for which the knowledge of the label would bring the highest discriminability
- of the dataset.
- Batch active learning is a generalization of a single instance active learning
+Batch active learning is a generalization of a single instance active learning
  by selecting a batch of documents for labeling.
  This task is much more demanding because plenty of different factors come
  into consideration (i.
  e.
  batch size, batch evaluation, etc.).
- In this paper, we provide a large scale study by decomposing the existing
+ In this part, we provide a large scale study by decomposing the existing
  algorithms into building blocks and systematically comparing meaningful
  combinations of these blocks with a subsequent evaluation on different
  text datasets.
@@ -7992,13 +7984,51 @@ Coreference Resolution
 \end_layout
 
 \begin_layout Standard
-The grand research from Google [OFR+19] shows that the point-wise estimate
- of model parameters does not usually result in an optimal approach.
+The grand research from Google 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ovadia2019can"
+literal "false"
+
+\end_inset
+
+ shows that the point-wise estimate of model parameters does not usually
+ result in an optimal approach.
  The models uncertainty measurement through the estimate of the empirical
  model weights distribution has already shown remarkable results in the
- active learning fields both in Computer Vision [GIG17], and NLP in such
- tasks like NER [SYL+17, LLW18], text classification [AWH18] and other applicati
-ons.
+ active learning fields both in Computer Vision 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "gal2017deep"
+literal "false"
+
+\end_inset
+
+, and NLP in such tasks like NER 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "shen2017deep"
+literal "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "lowell2019practical"
+literal "false"
+
+\end_inset
+
+, text classification 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "an2018deep"
+literal "false"
+
+\end_inset
+
+ and other applications.
  We aim to utilize the knowledge of extended uncertainty algorithms throughout
  single/multi instances learning, hot/warm/cold start training and adapt
  it to the CR problem to improve the existing framework.
@@ -8016,7 +8046,15 @@ Modern Coreference Resolution (CR) algorithms are combinations of sophisticated
  vast.
  Arguably, one of the most prominent points in the history of such models
  is when the continuous bag-of-words and skipgram approaches were introduced
- [MCCD13].
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "mikolov2013efficient"
+literal "false"
+
+\end_inset
+
+.
  At that point, machines started to learn the context surrounding particular
  words.
  Their vector representations acquired the ability to represent this context,
@@ -8025,17 +8063,71 @@ gular similarity) veritably described similarity of words or contexts.
  Still, models of these types were far from perfect, as they provided one
  with constant vectors per word for a pre-set vocabulary.
  Context-dependent representations with flexible vocabularies became available
- thanks to the introduction of the Transformer architecture [VSP+17] applied
- to the vocabulary formed not only by words but also by character ngrams
- constructed as meaningful parts of words.
+ thanks to the introduction of the Transformer architecture 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "vaswani2017attention"
+literal "false"
+
+\end_inset
+
+ applied to the vocabulary formed not only by words but also by character
+ ngrams constructed as meaningful parts of words.
  The power of the Transformer architecture lies in its encoding and decoding
  capability, improved by the self-attention mechanism, which learns to put
  stress on parts of text sequences.
  This gave birth to a lot of transformer-based language models such as the
- Bidirectional Encoder Representations from Transformers (BERT) [DCLT19],
- its fine-tuned variations [LCG+20, LOG+19] and further models [RN18, CYK+18].
- To this date, SpanBERT [JCL+19] has proven to be one of the most efficient
- architectures for coreference resolution.
+ Bidirectional Encoder Representations from Transformers (BERT) 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "devlin2018bert"
+literal "false"
+
+\end_inset
+
+, its fine-tuned variations 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "albert-Lan2020"
+literal "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "liu2019roberta"
+literal "false"
+
+\end_inset
+
+ and further models 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "gpt-Radford2018"
+literal "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "use-Cer2018"
+literal "false"
+
+\end_inset
+
+.
+ To this date, SpanBERT 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "cr-Joshi2019"
+literal "false"
+
+\end_inset
+
+ has proven to be one of the most efficient architectures for coreference
+ resolution.
  Its crucial difference from the standard BERT model is that it learns to
  predict the content of masked spans of text, taking into account their
  beginnings and endings, omitting the ability of the base BERT model to
@@ -8044,8 +8136,24 @@ gular similarity) veritably described similarity of words or contexts.
  one and attempts to infer individual masked tokens.
  Another model worthy of mention is a Longformer, whose architecture is
  based on transformers capable of processing long documents up to 4096 tokens
- [BPC20].
- The first end-to-end coreference resolution model was introduced in [LHLZ17].
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Beltagy2020Longformer"
+literal "false"
+
+\end_inset
+
+.
+ The first end-to-end coreference resolution model was introduced in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "cr-Lee17"
+literal "false"
+
+\end_inset
+
+.
  Its crucial difference from its predecessors was that it did not require
  preprocessing in the form of syntactic parsing or rule-based mention detection
  since the model can learn mention dependencies on its own to a forerunner-
@@ -8054,25 +8162,47 @@ gular similarity) veritably described similarity of words or contexts.
  in such a way that takes into account, firstly, if these spans are entity
  mentions and, secondly, whether the pair is of type antecedent-descendant
  in terms of coreference.
- The NLU model of choice provides span represen- tations.
+ The NLU model of choice provides span representations.
  The goal is to assign to each span an antecedent span.
- [JCL+19] belongs to the state-of-the-art approaches which utilize the same
- structure on top of SpanBERT.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "cr-Joshi2019"
+literal "false"
+
+\end_inset
+
+ belongs to the state-of-the-art approaches which utilize the same structure
+ on top of SpanBERT.
  One of the crucial drawbacks of the scoring approach is the choice of spans:
  sizes of relevant spans can be different, so a constant width of the window
  may not always be the right choice; spans can either overlap or be disjoint;
- if they over- lap, the value of the overlap also becomes a hyperparameter.
+ if they overlap, the value of the overlap also becomes a hyperparameter.
  In addition to that, the number of scoring procedures is quadratic in complexit
 y: each span has to be scored against every its counterpart.
  If the length of the document is large, the memory needed to store all
- entity mentions may become an issue (in [XSD20] authors propose an incremental
- structure for the CR model, which needs a lot less memory for the price
- of a slight decrease in performance).
+ entity mentions may become an issue (in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "cr-Xia2020"
+literal "false"
+
+\end_inset
+
+ authors propose an incremental structure for the CR model, which needs
+ a lot less memory for the price of a slight decrease in performance).
  While previous models are able to achieve decent results, their memory
  footprint is significant.
- The authors of [KRL21] bypassed the need to create span representations,
- relying on a combination of bilinear functions applied on endpoint token
- representations.
+ The authors of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Kirstain2021S2E"
+literal "false"
+
+\end_inset
+
+ bypassed the need to create span representations, relying on a combination
+ of bilinear functions applied on endpoint token representations.
  In addition to that, the new model is built on top of a Longformer encoder
  capable of processing long documents.
 \end_layout
@@ -8081,10 +8211,36 @@ y: each span has to be scored against every its counterpart.
 For languages other than English, the state of art for the CR is arguably
  even farther behind.
  For example, coreference resolution for Czech was attempted on the PCEDT
- dataset [HHP+12] in [Nov17].
+ dataset 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "pcedt-Hajic2012"
+literal "false"
+
+\end_inset
+
+ in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "cr-cz-Novak17"
+literal "false"
+
+\end_inset
+
+.
  However, the overall performance of the approach did not reach the mark
  of 0.7 in terms of F-score (whereas English models show more than 0.8 F1
- score).
+ score 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Ref
+\end_layout
+
+\end_inset
+
+).
  In addition to that, no transformer-based NLU model was available at the
  time.
 \end_layout
@@ -8095,18 +8251,65 @@ CR Meets Uncertainty
 
 \begin_layout Standard
 Integration of the uncertainty representations algorithms e.g deep ensembles
- [LPB16], MC Dropout [GIG17], SGLD [WT11] or Vadam [KNT+18] to the coreference
- resolution superstructure for the empirical model weights distribution
- estimate.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "lakshminarayanan2016simple"
+literal "false"
+
+\end_inset
+
+, MC Dropout 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "gal2017deep"
+literal "false"
+
+\end_inset
+
+, SGLD 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "welling2011bayesian"
+literal "false"
+
+\end_inset
+
+ or Vadam 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "khan2018fast"
+literal "false"
+
+\end_inset
+
+ to the coreference resolution superstructure for the empirical model weights
+ distribution estimate.
  The beforehand mentioned integration will result in more efficient learning
  and inference procedures.
  The primary investigation is concentrated around faster model learning
  (hot and warm start methods) with a lower number of training data, given
- the model pre- diction uncertainty [SSM21].
- The diversity of embedding-based superstructure model architec- tures makes
+ the model prediction uncertainty 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sahan2021active"
+literal "false"
+
+\end_inset
+
+.
+ The diversity of embedding-based superstructure model architectures makes
  the models’ uncertainty prediction slow and inefficient.
- The further step in the uncer- tainty estimate research is a generalization
- of the uncertainty given different models architectures (e.g., Vadam [KNT+18]).
+ The further step in the uncertainty estimate research is a generalization
+ of the uncertainty given different models architectures (e.g., Vadam 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "khan2018fast"
+literal "false"
+
+\end_inset
+
+).
  The output of the study will allow us to use the architecture agnostic
  empirical model weights distribution estimate for better noise measurement,
  faster learning, and label distribution prediction, specifically for different
@@ -8121,9 +8324,13 @@ Conclusion
 We expect to define new methods for solving coreference resolution with
  better performance applicable to texts in English and supporting Czech.
  We believe that the outlined strategy using uncertainty representation
- and representation of structural entities will significantly enhance the
- performance of CR.
- Each year, we expect to deliver a conference paper (conferences dedicated
+ will significantly enhance both the performance and learning process of
+ CR.
+ 
+\end_layout
+
+\begin_layout Standard
+Each year, we expect to deliver a conference paper (conferences dedicated
  to NLP such as ACL, COLING, NeurIPS, CoNLL, ICML, ICDM).
  However, the main focus will be given to three impact factor journal papers
  delivered in the second and third years (e.g., Transactions of the Association
