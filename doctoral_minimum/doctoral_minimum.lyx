@@ -422,9 +422,8 @@ literal "false"
 \end_inset
 
 .
- The idea of the paper's methodology is to generalize the optimal learning
- and present its functionality regarding one of the most complex problems
- - coreference resolution.
+ The idea of the research is to generalize the optimal learning and present
+ its functionality to one of the most complex problems - coreference resolution.
  We simultaneously explore various correlated sectors such as i) active
  learning, ii) models' uncertainty representation and iii) coreference resolutio
 n.
@@ -438,15 +437,7 @@ models uncertainty representation
 \shape default
  are codependent.
  We propose a more granular study and extension of the human-machine communicati
-on 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "thoppilan2022lamda"
-literal "false"
-
-\end_inset
-
-.
+on.
  Among a huge quantity of unlabeled data the machine is expected to tell
  to an annotator (subject matter expert or so called oracle) which labels
  from the set of unlabeled data will bring forth the most information about
@@ -521,8 +512,8 @@ literal "false"
 \end_layout
 
 \begin_layout Standard
-The subsequent branch of this paper is the active learning and model uncertainty
- integration into the coreference resolution problem.
+The subsequent branch of the research is the active learning and model uncertain
+ty integration into the coreference resolution problem.
  Coreference resolution (CR) combines detection and linking various mentions
  of entities within the text: linking noun phrases with their counterparts
  and pronouns, anaphora disambiguation, linking words with their pro-forms,
@@ -589,7 +580,20 @@ literal "false"
 \end_layout
 
 \begin_layout Part
-Single Instance Active Learning 
+Active Learning 
+\end_layout
+
+\begin_layout Standard
+In this section we show two grand comparative studies that cover not only
+ single instance and batch active learning problems but also a newer approach
+ on fine tuning the algorithms without a full retraining.
+ The research involves a detailed state-of-the-art algorithms study in the
+ active learning field with the additional novelty, modification and extension
+ of learning algorithms.
+\end_layout
+
+\begin_layout Section
+Single Instance Active Learning
 \end_layout
 
 \begin_layout Standard
@@ -646,7 +650,7 @@ Supervised classification of texts relies on the availability of reliable
  The best results were obtained for the most recent embeddings RoBERTa
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Introduction
 \end_layout
 
@@ -822,7 +826,7 @@ literal "false"
  using an ensemble of three different kinds of networks.
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Methods
 \end_layout
 
@@ -1534,7 +1538,7 @@ literal "false"
  200 epochs after each extension of the learning data set.
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Experiments
 \end_layout
 
@@ -1779,7 +1783,7 @@ literal "false"
  for Fake News and Fake News Detection datasets.
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsubsection
 Hyperparameter Tuning
 \end_layout
 
@@ -5577,7 +5581,7 @@ noprefix "false"
  adaptive tuning strategy offers clearly a potential for further improvement.
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsubsection
 Text Category Classification
 \begin_inset CommandInset label
 LatexCommand label
@@ -6440,7 +6444,7 @@ noprefix "false"
  in the long run.
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsubsection
 Fake News Classification
 \end_layout
 
@@ -6497,7 +6501,7 @@ The best performance of the active learning strategy was achieved for the
  than uncertainty representation.
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Conclusion
 \end_layout
 
@@ -6533,7 +6537,7 @@ Sensitivity of the active learning to the choice of embedding was evaluated
  all tested datasets of various complexity.
 \end_layout
 
-\begin_layout Part
+\begin_layout Section
 Batch Active Learning 
 \end_layout
 
@@ -6582,7 +6586,7 @@ Batch active learning is a generalization of a single instance active learning
  for certain datasets or experimental settings.
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Introduction
 \end_layout
 
@@ -6786,7 +6790,7 @@ noprefix "false"
  
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Batch Active Learning Methods 
 \begin_inset CommandInset label
 LatexCommand label
@@ -7438,7 +7442,7 @@ Since HAC strategy is an orthogonal factor to the remaining ones, we propose
  and HAC BALD for the ensembles.
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Experiment Setup 
 \begin_inset CommandInset label
 LatexCommand label
@@ -7748,7 +7752,7 @@ literal "false"
  
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Results 
 \begin_inset CommandInset label
 LatexCommand label
@@ -7956,7 +7960,7 @@ noprefix "false"
  
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Conclusion
 \end_layout
 
@@ -7977,6 +7981,42 @@ We have studied the influence of various factors (i.
  The agglomerative clustering improves performance for smaller batch sizes
  and may show better results than a more general method like entropy sampling.
  
+\end_layout
+
+\begin_layout Section
+Objectives
+\end_layout
+
+\begin_layout Standard
+Despite the fact that we were able to push the limits of both single and
+ batch active learning problems, there are still plenty of nuances that
+ must be solved.
+ The studied techniques work well on rather simpler neural networks.
+ Hence, a clear further research objective is algorithms generalization
+ to more complex neural networks.
+ The larger the network is, the harder it is to perform a training/fine-tuning
+ sequence, an additional training data selection and the uncertainty representat
+ions.
+ Some extensions of the studied algorithms exist e.g.
+ Variational Dropout 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "gal2017concrete"
+literal "false"
+
+\end_inset
+
+ is a better extension of MC Dropout 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "gal2017deep"
+literal "false"
+
+\end_inset
+
+ for more complex methods.
+ We also expect our research to follow with more sophisticated and architecture
+ agnostic warm start neural network training.
 \end_layout
 
 \begin_layout Part
@@ -8317,7 +8357,7 @@ literal "false"
 \end_layout
 
 \begin_layout Section
-Conclusion
+Objectives
 \end_layout
 
 \begin_layout Standard

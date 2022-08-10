@@ -422,9 +422,8 @@ literal "false"
 \end_inset
 
 .
- The idea of the paper's methodology is to generalize the optimal learning
- and present its functionality regarding one of the most complex problems
- - coreference resolution.
+ The idea of the research is to generalize the optimal learning and present
+ its functionality to one of the most complex problems - coreference resolution.
  We simultaneously explore various correlated sectors such as i) active
  learning, ii) models' uncertainty representation and iii) coreference resolutio
 n.
@@ -438,15 +437,7 @@ models uncertainty representation
 \shape default
  are codependent.
  We propose a more granular study and extension of the human-machine communicati
-on 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "thoppilan2022lamda"
-literal "false"
-
-\end_inset
-
-.
+on.
  Among a huge quantity of unlabeled data the machine is expected to tell
  to an annotator (subject matter expert or so called oracle) which labels
  from the set of unlabeled data will bring forth the most information about
@@ -521,8 +512,8 @@ literal "false"
 \end_layout
 
 \begin_layout Standard
-The subsequent branch of this paper is the active learning and model uncertainty
- integration into the coreference resolution problem.
+The subsequent branch of the research is the active learning and model uncertain
+ty integration into the coreference resolution problem.
  Coreference resolution (CR) combines detection and linking various mentions
  of entities within the text: linking noun phrases with their counterparts
  and pronouns, anaphora disambiguation, linking words with their pro-forms,
@@ -589,7 +580,44 @@ literal "false"
 \end_layout
 
 \begin_layout Part
-Single Instance Active Learning 
+Active Learning 
+\end_layout
+
+\begin_layout Enumerate
+Tell that in this section there are two big comparative studies where the
+ second one extends the first one with an additional contribution on the
+ technologies like warm start.
+ 
+\end_layout
+
+\begin_layout Enumerate
+What are the unsolved problems?
+\end_layout
+
+\begin_layout Enumerate
+I want to solve the problem this way.
+ Hence, we did this sort of research
+\end_layout
+
+\begin_layout Standard
+In this section we show two grand comparative studies that cover not only
+ single instance and batch active learning problems but also a newer approach
+ on fine tuning the algorithms without a full retraining.
+ The research involves a detailed state-of-the-art algorithms study in the
+ active learning field with the additional novelty in modification and extension
+ of learning algorithms.
+\end_layout
+
+\begin_layout Standard
+Despite the fact that we were able to push the limits of both single and
+ batch active learning problems, there are still plenty of nuances that
+ we have to solve.
+ The studied techniques work well on a rather simpler neural networks.
+ The larger the network
+\end_layout
+
+\begin_layout Section
+Single Instance Active Learning
 \end_layout
 
 \begin_layout Standard
@@ -646,7 +674,7 @@ Supervised classification of texts relies on the availability of reliable
  The best results were obtained for the most recent embeddings RoBERTa
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Introduction
 \end_layout
 
@@ -822,7 +850,7 @@ literal "false"
  using an ensemble of three different kinds of networks.
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Methods
 \end_layout
 
@@ -1534,7 +1562,7 @@ literal "false"
  200 epochs after each extension of the learning data set.
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Experiments
 \end_layout
 
@@ -1779,7 +1807,7 @@ literal "false"
  for Fake News and Fake News Detection datasets.
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsubsection
 Hyperparameter Tuning
 \end_layout
 
@@ -5577,7 +5605,7 @@ noprefix "false"
  adaptive tuning strategy offers clearly a potential for further improvement.
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsubsection
 Text Category Classification
 \begin_inset CommandInset label
 LatexCommand label
@@ -6440,7 +6468,7 @@ noprefix "false"
  in the long run.
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsubsection
 Fake News Classification
 \end_layout
 
@@ -6497,7 +6525,7 @@ The best performance of the active learning strategy was achieved for the
  than uncertainty representation.
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Conclusion
 \end_layout
 
@@ -6533,7 +6561,7 @@ Sensitivity of the active learning to the choice of embedding was evaluated
  all tested datasets of various complexity.
 \end_layout
 
-\begin_layout Part
+\begin_layout Section
 Batch Active Learning 
 \end_layout
 
@@ -6582,7 +6610,7 @@ Batch active learning is a generalization of a single instance active learning
  for certain datasets or experimental settings.
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Introduction
 \end_layout
 
@@ -6786,7 +6814,7 @@ noprefix "false"
  
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Batch Active Learning Methods 
 \begin_inset CommandInset label
 LatexCommand label
@@ -7438,7 +7466,7 @@ Since HAC strategy is an orthogonal factor to the remaining ones, we propose
  and HAC BALD for the ensembles.
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Experiment Setup 
 \begin_inset CommandInset label
 LatexCommand label
@@ -7748,7 +7776,7 @@ literal "false"
  
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Results 
 \begin_inset CommandInset label
 LatexCommand label
@@ -7956,7 +7984,7 @@ noprefix "false"
  
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Conclusion
 \end_layout
 
@@ -8093,9 +8121,41 @@ literal "false"
 
 \end_inset
 
-, LOG+19] and further models [RN18, CYK+18].
- To this date, SpanBERT [JCL+19] has proven to be one of the most efficient
- architectures for coreference resolution.
+, 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "liu2019roberta"
+literal "false"
+
+\end_inset
+
+ and further models 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "gpt-Radford2018"
+literal "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "use-Cer2018"
+literal "false"
+
+\end_inset
+
+.
+ To this date, SpanBERT 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "cr-Joshi2019"
+literal "false"
+
+\end_inset
+
+ has proven to be one of the most efficient architectures for coreference
+ resolution.
  Its crucial difference from the standard BERT model is that it learns to
  predict the content of masked spans of text, taking into account their
  beginnings and endings, omitting the ability of the base BERT model to
@@ -8104,8 +8164,24 @@ literal "false"
  one and attempts to infer individual masked tokens.
  Another model worthy of mention is a Longformer, whose architecture is
  based on transformers capable of processing long documents up to 4096 tokens
- [BPC20].
- The first end-to-end coreference resolution model was introduced in [LHLZ17].
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Beltagy2020Longformer"
+literal "false"
+
+\end_inset
+
+.
+ The first end-to-end coreference resolution model was introduced in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "cr-Lee17"
+literal "false"
+
+\end_inset
+
+.
  Its crucial difference from its predecessors was that it did not require
  preprocessing in the form of syntactic parsing or rule-based mention detection
  since the model can learn mention dependencies on its own to a forerunner-
@@ -8114,25 +8190,47 @@ literal "false"
  in such a way that takes into account, firstly, if these spans are entity
  mentions and, secondly, whether the pair is of type antecedent-descendant
  in terms of coreference.
- The NLU model of choice provides span represen- tations.
+ The NLU model of choice provides span representations.
  The goal is to assign to each span an antecedent span.
- [JCL+19] belongs to the state-of-the-art approaches which utilize the same
- structure on top of SpanBERT.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "cr-Joshi2019"
+literal "false"
+
+\end_inset
+
+ belongs to the state-of-the-art approaches which utilize the same structure
+ on top of SpanBERT.
  One of the crucial drawbacks of the scoring approach is the choice of spans:
  sizes of relevant spans can be different, so a constant width of the window
  may not always be the right choice; spans can either overlap or be disjoint;
- if they over- lap, the value of the overlap also becomes a hyperparameter.
+ if they overlap, the value of the overlap also becomes a hyperparameter.
  In addition to that, the number of scoring procedures is quadratic in complexit
 y: each span has to be scored against every its counterpart.
  If the length of the document is large, the memory needed to store all
- entity mentions may become an issue (in [XSD20] authors propose an incremental
- structure for the CR model, which needs a lot less memory for the price
- of a slight decrease in performance).
+ entity mentions may become an issue (in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "cr-Xia2020"
+literal "false"
+
+\end_inset
+
+ authors propose an incremental structure for the CR model, which needs
+ a lot less memory for the price of a slight decrease in performance).
  While previous models are able to achieve decent results, their memory
  footprint is significant.
- The authors of [KRL21] bypassed the need to create span representations,
- relying on a combination of bilinear functions applied on endpoint token
- representations.
+ The authors of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Kirstain2021S2E"
+literal "false"
+
+\end_inset
+
+ bypassed the need to create span representations, relying on a combination
+ of bilinear functions applied on endpoint token representations.
  In addition to that, the new model is built on top of a Longformer encoder
  capable of processing long documents.
 \end_layout
@@ -8141,7 +8239,23 @@ y: each span has to be scored against every its counterpart.
 For languages other than English, the state of art for the CR is arguably
  even farther behind.
  For example, coreference resolution for Czech was attempted on the PCEDT
- dataset [HHP+12] in [Nov17].
+ dataset 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "pcedt-Hajic2012"
+literal "false"
+
+\end_inset
+
+ in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "cr-cz-Novak17"
+literal "false"
+
+\end_inset
+
+.
  However, the overall performance of the approach did not reach the mark
  of 0.7 in terms of F-score (whereas English models show more than 0.8 F1
  score 
