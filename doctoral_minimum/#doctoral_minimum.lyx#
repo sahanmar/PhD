@@ -341,13 +341,11 @@ literal "false"
 
 \end_inset
 
-, coreference resolution
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-ref
-\end_layout
+, coreference resolution 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dobrovolskii2021word"
+literal "false"
 
 \end_inset
 
@@ -520,13 +518,11 @@ ty integration into the coreference resolution problem.
  etc..
  Hence, CR-solving models significantly impact the quality of the text mining
  algorithms.
- The state-of-art CR models' architectures
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-ref
-\end_layout
+ The state-of-art CR models' architectures 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dobrovolskii2021word"
+literal "false"
 
 \end_inset
 
@@ -579,48 +575,65 @@ literal "false"
  towards entities from the article by linking comment mentions to them.
 \end_layout
 
+\begin_layout Standard
+The research paper covers the topic of active learning in the first part.
+ The active learning part introduces a reader to single instance and batch
+ active learning problem study, where the content is taken from our articles
+ (
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sahan2021active"
+literal "false"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sahan2022active"
+literal "false"
+
+\end_inset
+
+ 
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+The paper is in review for COLING conference
+\end_layout
+
+\end_inset
+
+).
+ This part was well studied with the additional contribution to the field.
+ In the end of the first part we highlight what is our objective for the
+ further work.
+ The second part gives a general introduction to a coreference resolution
+ problem with a detailed breakdown of the field's history and state-of-the-art.
+ We also define our objective for further research that follows with a summary.
+ 
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
 \begin_layout Part
 Active Learning 
 \end_layout
 
-\begin_layout Enumerate
-Tell that in this section there are two big comparative studies where the
- second one extends the first one with an additional contribution on the
- technologies like warm start.
- 
-\end_layout
-
-\begin_layout Enumerate
-What are the unsolved problems?
-\end_layout
-
-\begin_layout Enumerate
-I want to solve the problem this way.
- Hence, we did this sort of research
-\end_layout
-
 \begin_layout Standard
-In this section we show two grand comparative studies that cover not only
+In this section we show two vast comparative studies that cover not only
  single instance and batch active learning problems but also a newer approach
  on fine tuning the algorithms without a full retraining.
  The research involves a detailed state-of-the-art algorithms study in the
- active learning field with the additional novelty in modification and extension
+ active learning field with the additional novelty, modification and extension
  of learning algorithms.
 \end_layout
 
-\begin_layout Standard
-Despite the fact that we were able to push the limits of both single and
- batch active learning problems, there are still plenty of nuances that
- we have to solve.
- The studied techniques work well on a rather simpler neural networks.
- The larger the network
-\end_layout
-
 \begin_layout Section
-Single Instance Active Learning
-\end_layout
-
-\begin_layout Standard
+Single Instance Active Learning 
 \begin_inset Foot
 status open
 
@@ -6563,9 +6576,6 @@ Sensitivity of the active learning to the choice of embedding was evaluated
 
 \begin_layout Section
 Batch Active Learning 
-\end_layout
-
-\begin_layout Standard
 \begin_inset Foot
 status open
 
@@ -6574,6 +6584,13 @@ The major part of the content in this part was taken from the paper sent
  to COLING conference.
  
 \end_layout
+
+\end_inset
+
+ 
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Batch-Active-Learning"
 
 \end_inset
 
@@ -8007,8 +8024,59 @@ We have studied the influence of various factors (i.
  
 \end_layout
 
+\begin_layout Section
+Objectives
+\end_layout
+
+\begin_layout Standard
+Despite the fact that we were able to push the limits of both single and
+ batch active learning problems, there are still plenty of nuances that
+ must be solved.
+ The studied techniques work well on rather simpler neural networks.
+ Hence, a clear further research objective is algorithms generalization
+ to more complex neural networks.
+ The larger the network is, the harder it is to perform a training/fine-tuning
+ sequence, an additional training data selection and the uncertainty representat
+ions.
+ Some extensions of the studied algorithms exist e.g.
+ Variational Dropout 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "gal2017concrete"
+literal "false"
+
+\end_inset
+
+ is a better extension of MC Dropout 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "gal2017deep"
+literal "false"
+
+\end_inset
+
+ for more complex methods.
+ We also expect our research to follow with more sophisticated and architecture
+ agnostic warm start neural network training.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
 \begin_layout Part
 Coreference Resolution
+\end_layout
+
+\begin_layout Standard
+In this part we introduce a coreference resolution problem and a state of
+ art description.
+ In addition, we formulate our CR objective and the active learning to CR
+ vision of the further research.
+ 
 \end_layout
 
 \begin_layout Standard
@@ -8057,13 +8125,29 @@ literal "false"
 \end_inset
 
  and other applications.
- We aim to utilize the knowledge of extended uncertainty algorithms throughout
- single/multi instances learning, hot/warm/cold start training and adapt
- it to the CR problem to improve the existing framework.
+ We aim to utilize the knowledge of extended uncertainty algorithms (as
+ it was shown in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sahan2022active"
+literal "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "gal2017concrete"
+literal "false"
+
+\end_inset
+
+, ...) throughout single/multi instances learning, hot/warm/cold start training
+ and adapt it to the CR problem to improve the existing framework.
 \end_layout
 
 \begin_layout Section
-State-of-The-Art
+Introduction to Coreference Resolution Problem
 \end_layout
 
 \begin_layout Standard
@@ -8159,12 +8243,19 @@ literal "false"
  Its crucial difference from the standard BERT model is that it learns to
  predict the content of masked spans of text, taking into account their
  beginnings and endings, omitting the ability of the base BERT model to
- predict pre- ceding sentences.
+ predict preceding sentences.
  In contrast, BERT learns to predict the following sentence for each preceding
  one and attempts to infer individual masked tokens.
- Another model worthy of mention is a Longformer, whose architecture is
- based on transformers capable of processing long documents up to 4096 tokens
- 
+ Another model worthy of mention is a Longformer 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Beltagy2020Longformer"
+literal "false"
+
+\end_inset
+
+, whose architecture is based on transformers capable of processing long
+ documents up to 4096 tokens 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Beltagy2020Longformer"
@@ -8184,8 +8275,8 @@ literal "false"
 .
  Its crucial difference from its predecessors was that it did not require
  preprocessing in the form of syntactic parsing or rule-based mention detection
- since the model can learn mention dependencies on its own to a forerunner-
- outperforming extent.
+ since the model can learn mention dependencies on its own to a forerunner-outpe
+rforming extent.
  The main idea of the model is to learn to score pairs of textual spans
  in such a way that takes into account, firstly, if these spans are entity
  mentions and, secondly, whether the pair is of type antecedent-descendant
@@ -8233,6 +8324,38 @@ literal "false"
  of bilinear functions applied on endpoint token representations.
  In addition to that, the new model is built on top of a Longformer encoder
  capable of processing long documents.
+ Another work that reaches current state-of-the-art performance 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dobrovolskii2021word"
+literal "false"
+
+\end_inset
+
+ also avoids span based approach.
+ Even though the author uses RoBERTa embedding 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "liu2019roberta"
+literal "false"
+
+\end_inset
+
+, the performance of the model is better than the one with Longformer.
+ Author relies on attention mechanism that encodes tokens with the additional
+ context based information from the surrounding.
+ Hence, this is the argument of avoiding span based representation.
+ When the CR classification is done, an additional span detection model
+ is applied.
+ Described approach helps to reduce the computational complexity from 
+\begin_inset Formula $O(n^{4})$
+\end_inset
+
+ to 
+\begin_inset Formula $O(n^{2})$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -8259,12 +8382,10 @@ literal "false"
  However, the overall performance of the approach did not reach the mark
  of 0.7 in terms of F-score (whereas English models show more than 0.8 F1
  score 
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Ref
-\end_layout
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dobrovolskii2021word"
+literal "false"
 
 \end_inset
 
@@ -8274,96 +8395,107 @@ Ref
 \end_layout
 
 \begin_layout Section
-CR Meets Uncertainty
+Objectives
 \end_layout
 
 \begin_layout Standard
-Integration of the uncertainty representations algorithms e.g deep ensembles
+Coreference resolution is a complex problem that involves both strong coding
+ skills and a significant computational power access.
+ Thus, the priority is to finalize state-of-the-art implementation that
+ will be a basis for future uncertainty models integration.
+ The subsequent action is to define the set of algorithms for uncertainty
+ representation.
+ In section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Batch-Active-Learning"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ we showed that the uncertainty algorithms work well only in particular
+ cases.
+ When the parameters distribution is well-estimated the training and prediction
+ performance reaches tremendous results.
+ Further part of the work will be measured on combining the active learning
+ strategy with such a heavy model as coreference resolution.
+ The contribution in this part will be crucial.
+ We expect to introduce hot and warm start approaches for heavy weight models
+ that will immensely reduce learning time and training labels acquisition
+ process.
  
-\begin_inset CommandInset citation
-LatexCommand cite
-key "lakshminarayanan2016simple"
-literal "false"
+\end_layout
 
-\end_inset
-
-, MC Dropout 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "gal2017deep"
-literal "false"
-
-\end_inset
-
-, SGLD 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "welling2011bayesian"
-literal "false"
-
-\end_inset
-
- or Vadam 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "khan2018fast"
-literal "false"
-
-\end_inset
-
- to the coreference resolution superstructure for the empirical model weights
- distribution estimate.
- The beforehand mentioned integration will result in more efficient learning
- and inference procedures.
- The primary investigation is concentrated around faster model learning
- (hot and warm start methods) with a lower number of training data, given
- the model prediction uncertainty 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "sahan2021active"
-literal "false"
-
-\end_inset
-
-.
- The diversity of embedding-based superstructure model architectures makes
- the models’ uncertainty prediction slow and inefficient.
- The further step in the uncertainty estimate research is a generalization
- of the uncertainty given different models architectures (e.g., Vadam 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "khan2018fast"
-literal "false"
-
-\end_inset
-
-).
- The output of the study will allow us to use the architecture agnostic
- empirical model weights distribution estimate for better noise measurement,
- faster learning, and label distribution prediction, specifically for different
+\begin_layout Standard
+The output of the study will allow us to use the architecture agnostic empirical
+ model weights distribution estimate for better noise measurement, faster
+ learning, and label distribution prediction, specifically for different
  types of CR task embedding superstructure.
 \end_layout
 
-\begin_layout Section
-Conclusion
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Summary
 \end_layout
 
 \begin_layout Standard
-We expect to define new methods for solving coreference resolution with
- better performance applicable to texts in English and supporting Czech.
- We believe that the outlined strategy using uncertainty representation
- will significantly enhance both the performance and learning process of
- CR.
+
+\series bold
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+addcontentsline{toc}{section}{Summary}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The research purposes and objectives are clear to us and lie in the final
+ goal of the generalization of active learning methodology towards the coreferen
+ce resolution problem.
+ We underline that the choice of coreference resolution is based on the
+ adequate complexity of neural networks architecture, broad use case and
+ a personal interest.
+ We believe that when the result of our work shows good model uncertainty
+ representation for CR, the extension to other problems will be straightforward.
+ We are also convinced that the old fashioned cold-start approach (retraining
+ from scratch) became obsolete.
+ Since our results of fine tuning the model with new labels showed incredible
+ performance, the research in warm and hot start branches must be continued.
  
 \end_layout
 
 \begin_layout Standard
-Each year, we expect to deliver a conference paper (conferences dedicated
- to NLP such as ACL, COLING, NeurIPS, CoNLL, ICML, ICDM).
- However, the main focus will be given to three impact factor journal papers
- delivered in the second and third years (e.g., Transactions of the Association
- for Computational Linguistics, Journal of Computational Linguistics, Journal
- of Information Retrieval, Journal of Machine Learning).
+In this doctoral minimal thesis we showed a significant and strong progress
+ in a study of uncertainty methods representations for active learning strategie
+s.
+ We were able to outperform state-of-art methods for different problems
+ both for single instance and batch active learning.
+ Moreover, we have successfully introduced text classification active learning
+ approach with warm start methodology that speeds up massively model's training.
+ We also explored the field of latest CR techniques and are aware of current
+ top performing solutions.
+ Described results and contributions let us operate with a sufficient amount
+ of knowledge for the extension of CR problem by enriching it with uncertainty
+ algorithms.
+ Interestingly, the problem has no ultimate solution.
+ It can be infinitely generalized (e.g choice of embedding, choice of CR
+ superstructures, language independency, etc..)
 \end_layout
 
 \begin_layout Standard
