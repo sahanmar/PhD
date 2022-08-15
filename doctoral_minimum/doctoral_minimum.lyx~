@@ -1868,40 +1868,12 @@ Hyperparameter Tuning
 \end_layout
 
 \begin_layout Standard
-\align center
 \begin_inset Float table
 wide false
 sideways false
 status open
 
 \begin_layout Plain Layout
-\align center
-\begin_inset Float table
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\begin_inset Box Frameless
-position "t"
-hor_pos "c"
-has_inner_box 1
-inner_pos "t"
-use_parbox 0
-use_makebox 0
-width "100col%"
-special "none"
-height "1in"
-height_special "totalheight"
-thickness "0.4pt"
-separation "3pt"
-shadowsize "4pt"
-framecolor "black"
-backgroundcolor "none"
-status open
-
-\begin_layout Plain Layout
-\align center
 \begin_inset Box Frameless
 position "t"
 hor_pos "c"
@@ -4020,31 +3992,38 @@ RoBERTa
 
 \end_layout
 
-\end_inset
-
-
-\end_layout
-
 \begin_layout Plain Layout
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
+
+\series bold
 \begin_inset CommandInset label
 LatexCommand label
-name "tab:fast_text_roberta_tech_science"
+name "tab:Fast-Text-and-Roberta-tech-science"
 
 \end_inset
 
-Results for Tech vs Science categories
-\begin_inset Note Note
-status open
+Fast Text
+\series default
+ and 
+\series bold
+RoBERTa
+\series default
+ encoding based AUC of text classification after selected number of requests
+ of the active learning using DEnFi and Dropout MC warm-start for various
+ selection of the perturbation noise 𝑞.
+ Average over 10 runs in the Tech vs Science categories.
+ The best result is denoted by a star, results within one standard deviation
+ of the winner are displayed in bold font.
+\end_layout
+
+\end_inset
+
+
+\end_layout
 
 \begin_layout Plain Layout
-Labels in text are fucked up
-\end_layout
-
-\end_inset
-
 
 \end_layout
 
@@ -4053,10 +4032,12 @@ Labels in text are fucked up
 
 \end_layout
 
-\end_inset
-
-
-\end_layout
+\begin_layout Standard
+\align center
+\begin_inset Float table
+wide false
+sideways false
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -4066,26 +4047,6 @@ sideways false
 status open
 
 \begin_layout Plain Layout
-\begin_inset Box Frameless
-position "t"
-hor_pos "c"
-has_inner_box 1
-inner_pos "t"
-use_parbox 0
-use_makebox 0
-width "100col%"
-special "none"
-height "1in"
-height_special "totalheight"
-thickness "0.4pt"
-separation "3pt"
-shadowsize "4pt"
-framecolor "black"
-backgroundcolor "none"
-status collapsed
-
-\begin_layout Plain Layout
-\align center
 \begin_inset Box Frameless
 position "t"
 hor_pos "c"
@@ -5501,42 +5462,10 @@ RoBERTa
 \series bold
 \begin_inset CommandInset label
 LatexCommand label
-name "tab:fast_text_roberta_fake_news"
+name "tab:Fast-Text-and-Roberta-fake-news"
 
 \end_inset
 
-
-\series default
-Results for Fake and True news categories (Fake News Detection dataset)
- 
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Labels in text are fucked up
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-
-\series bold
 Fast Text
 \series default
  and 
@@ -5544,9 +5473,10 @@ Fast Text
 RoBERTa
 \series default
  encoding based AUC of text classification after selected number of requests
- of the active learning using DEnFi and Dropout MC warm-start for various
- selection of the perturbation noise 𝑞.
- Average over 10 runs for top tables and 5 runs for bottom tables.
+ of the active learning using DEnFi and Dropout warm-start for various selection
+ of the perturbation noise q.
+ Average over 5 runs on the Fake and True news categories (Fake News Detection
+ dataset).
  The best result is denoted by a star, results within one standard deviation
  of the winner are displayed in bold font.
 \end_layout
@@ -5578,7 +5508,7 @@ The classification network was designed as a feed-forward NN with one dense
  for DEnFi and Dropout MC is displayed in Table 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "tab:fast_text_roberta_tech_science"
+reference "tab:Fast-Text-and-Roberta-tech-science"
 plural "false"
 caps "false"
 noprefix "false"
@@ -5588,7 +5518,7 @@ noprefix "false"
  and Table 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "tab:fast_text_roberta_fake_news"
+reference "tab:Fast-Text-and-Roberta-fake-news"
 plural "false"
 caps "false"
 noprefix "false"
@@ -5604,7 +5534,7 @@ noprefix "false"
 Based on Table 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "tab:fast_text_roberta_tech_science"
+reference "tab:Fast-Text-and-Roberta-tech-science"
 plural "false"
 caps "false"
 noprefix "false"
@@ -5621,7 +5551,7 @@ xploitation tradeoff.
  The results from Table 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "tab:fast_text_roberta_tech_science"
+reference "tab:Fast-Text-and-Roberta-tech-science"
 plural "false"
 caps "false"
 noprefix "false"
@@ -5638,7 +5568,7 @@ noprefix "false"
  of requests is also visible in Table 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "tab:fast_text_roberta_fake_news"
+reference "tab:Fast-Text-and-Roberta-fake-news"
 plural "false"
 caps "false"
 noprefix "false"
