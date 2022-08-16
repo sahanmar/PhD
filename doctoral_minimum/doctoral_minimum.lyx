@@ -4,7 +4,7 @@
 \begin_header
 \save_transient_properties true
 \origin unavailable
-\textclass article
+\textclass report
 \begin_preamble
 \usepackage[T1]{fontenc}
 % \usepackage{showframe}          % http://www.ctan.org/pkg/showframe
@@ -195,7 +195,7 @@ FACULTY OF ELECTRICAL ENGINEERING
 
 \begin_layout Standard
 \align block
-\begin_inset VSpace 7cm
+\begin_inset VSpace 8cm
 \end_inset
 
 
@@ -613,10 +613,19 @@ literal "false"
 \end_layout
 
 \begin_layout Standard
-The report covers the topic of active learning in the first part.
- The active learning part introduces a reader to a single instance and batch
- active learning problem study, where the content is taken from our articles
- (
+The report covers the topic of coreference resolution overview in the first
+ chapter.
+ It gives a general introduction to a coreference resolution problem with
+ a detailed breakdown of the field's history and state-of-the-art.
+ The coreference resolution problem is considered as an experimental ground
+ for the uncertainty learning applications.
+ We also define our objectives for further research in this domain.
+\end_layout
+
+\begin_layout Standard
+The second chapter follows with the active learning part, which introduces
+ a reader to a single instance and batch active learning problem study,
+ where the content is taken from our articles (
 \begin_inset CommandInset citation
 LatexCommand cite
 key "sahan2021active"
@@ -644,13 +653,8 @@ The paper is submitted to COLING conference
 
 ).
  This part was deeply studied with an additional contribution to the field.
- In the end of the first part we highlight what is our objectives for the
- further work.
- The second part gives a general introduction to a coreference resolution
- problem with a detailed breakdown of the field's history and state-of-the-art.
- The coreference resolution problem is considered as an experimental ground
- for the uncertainty learning applications.
- We also define our objectives for further research in this domain.
+ In the end of the second chapter we highlight what are our objectives for
+ the further work.
  The concluding section is summary where we overview our achievements and
  a plan of the future work.
  
@@ -660,19 +664,445 @@ The paper is submitted to COLING conference
 
 \end_layout
 
-\begin_layout Part
+\begin_layout Chapter
+Coreference Resolution
+\end_layout
+
+\begin_layout Standard
+Coreference resolution is the task of determining linguistic expressions
+ that refer to the same real-world entity in natural language.
+ In this part we introduce a coreference resolution problem and a state
+ of art description.
+ In addition, we formulate our CR objective and the active learning to CR
+ vision of the further research.
+ 
+\end_layout
+
+\begin_layout Standard
+The grand research from Google 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ovadia2019can"
+literal "false"
+
+\end_inset
+
+ shows that the point-wise estimate of model parameters does not usually
+ result in an optimal approach.
+ The models uncertainty measurement through the estimate of the empirical
+ model weights distribution has already shown remarkable results in the
+ active learning fields both in Computer Vision 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "gal2017deep"
+literal "false"
+
+\end_inset
+
+, and NLP in such tasks like NER 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "shen2017deep"
+literal "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "lowell2019practical"
+literal "false"
+
+\end_inset
+
+, text classification 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "an2018deep"
+literal "false"
+
+\end_inset
+
+ and other applications.
+ 
+\end_layout
+
+\begin_layout Section
+Introduction to Coreference Resolution Problem
+\end_layout
+
+\begin_layout Standard
+Modern Coreference Resolution (CR) algorithms are combinations of sophisticated
+ vector embeddings representing context and deep neural network superstructures
+ that perform the coreference resolution itself.
+ The set of existing models for natural language understanding (NLU) is
+ vast.
+ Arguably, one of the most prominent points in the history of such models
+ is when the continuous bag-of-words and skipgram approaches were introduced
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "mikolov2013efficient"
+literal "false"
+
+\end_inset
+
+.
+ At that point, machines started to learn the context surrounding particular
+ words.
+ Their vector representations acquired the ability to represent this context,
+ meaning proximity of such vectors in terms of a metric of choice (L2, cosine/an
+gular similarity) veritably described similarity of words or contexts.
+ Still, models of these types were far from perfect, as they provided one
+ with constant vectors per word for a pre-set vocabulary.
+ Context-dependent representations with flexible vocabularies became available
+ thanks to the introduction of the Transformer architecture 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "vaswani2017attention"
+literal "false"
+
+\end_inset
+
+ applied to the vocabulary formed not only by words but also by character
+ ngrams constructed as meaningful parts of words.
+ The power of the Transformer architecture lies in its encoding and decoding
+ capability, improved by the self-attention mechanism, which learns to put
+ stress on parts of text sequences.
+ This gave birth to a lot of transformer-based language models such as the
+ Bidirectional Encoder Representations from Transformers (BERT) 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "devlin2018bert"
+literal "false"
+
+\end_inset
+
+, its fine-tuned variations 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "albert-Lan2020"
+literal "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "liu2019roberta"
+literal "false"
+
+\end_inset
+
+ and further models 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "gpt-Radford2018"
+literal "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "use-Cer2018"
+literal "false"
+
+\end_inset
+
+.
+ To this date, SpanBERT 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "cr-Joshi2019"
+literal "false"
+
+\end_inset
+
+ has proven to be one of the most efficient architectures for coreference
+ resolution.
+ Its crucial difference from the standard BERT model is that it learns to
+ predict the content of masked spans of text, taking into account their
+ beginnings and endings, omitting the ability of the base BERT model to
+ predict preceding sentences.
+ In contrast, BERT learns to predict the following sentence for each preceding
+ one and attempts to infer individual masked tokens.
+ Another model worthy of mention is a Longformer 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Beltagy2020Longformer"
+literal "false"
+
+\end_inset
+
+, whose architecture is based on transformers capable of processing long
+ documents up to 4096 tokens 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Beltagy2020Longformer"
+literal "false"
+
+\end_inset
+
+.
+ The first end-to-end coreference resolution model was introduced in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "cr-Lee17"
+literal "false"
+
+\end_inset
+
+.
+ Its crucial difference from its predecessors was that it did not require
+ preprocessing in the form of syntactic parsing or rule-based mention detection
+ since the model can learn mention dependencies on its own to a forerunner-outpe
+rforming extent.
+ The main idea of the model is to learn to score pairs of textual spans
+ in such a way that takes into account, firstly, if these spans are entity
+ mentions and, secondly, whether the pair is of type antecedent-descendant
+ in terms of coreference.
+ The NLU model of choice provides span representations.
+ The goal is to assign to each span an antecedent span.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "cr-Joshi2019"
+literal "false"
+
+\end_inset
+
+ belongs to the state-of-the-art approaches which utilize the same structure
+ on top of SpanBERT.
+ One of the crucial drawbacks of the scoring approach is the choice of spans:
+ sizes of relevant spans can be different, so a constant width of the window
+ may not always be the right choice; spans can either overlap or be disjoint;
+ if they overlap, the value of the overlap also becomes a hyperparameter.
+ In addition to that, the number of scoring procedures is quadratic in complexit
+y: each span has to be scored against every its counterpart.
+ If the length of the document is large, the memory needed to store all
+ entity mentions may become an issue (in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "cr-Xia2020"
+literal "false"
+
+\end_inset
+
+ authors propose an incremental structure for the CR model, which needs
+ a lot less memory for the price of a slight decrease in performance).
+ While previous models are able to achieve decent results, their memory
+ footprint is significant.
+ The authors of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Kirstain2021S2E"
+literal "false"
+
+\end_inset
+
+ bypassed the need to create span representations, relying on a combination
+ of bilinear functions applied on endpoint token representations.
+ In addition to that, the new model is built on top of a Longformer encoder
+ capable of processing long documents.
+ Another work that reaches current state-of-the-art performance 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dobrovolskii2021word"
+literal "false"
+
+\end_inset
+
+ also avoids span based approach.
+ Even though the author uses RoBERTa embedding 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "liu2019roberta"
+literal "false"
+
+\end_inset
+
+, the performance of the model is better than the one with Longformer.
+ Author relies on attention mechanism that encodes tokens with the additional
+ context based information from the surrounding.
+ Hence, this is the argument of avoiding span based representation.
+ When the CR classification is done, an additional span detection model
+ is applied.
+ Described approach helps to reduce the computational complexity from 
+\begin_inset Formula $O(n^{4})$
+\end_inset
+
+ to 
+\begin_inset Formula $O(n^{2})$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+For languages other than English, the state of art for the CR is arguably
+ even farther behind.
+ For example, coreference resolution for Czech was attempted on the PCEDT
+ dataset 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "pcedt-Hajic2012"
+literal "false"
+
+\end_inset
+
+ in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "cr-cz-Novak17"
+literal "false"
+
+\end_inset
+
+.
+ However, the overall performance of the approach did not reach the mark
+ of 0.7 in terms of F-score (whereas English models show more than 0.8 F1
+ score 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dobrovolskii2021word"
+literal "false"
+
+\end_inset
+
+).
+ In addition to that, no transformer-based NLU model was available at the
+ time.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Moved here from intro to chapter
+\end_layout
+
+\end_inset
+
+We aim to utilize the knowledge of extended uncertainty algorithms (as it
+ was shown in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sahan2022active"
+literal "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "gal2017concrete"
+literal "false"
+
+\end_inset
+
+, ...) throughout single/multi instances learning, hot/warm/cold start training
+ and adapt it to the CR problem to improve the existing framework.
+\end_layout
+
+\begin_layout Section
+Objectives
+\end_layout
+
+\begin_layout Standard
+Coreference resolution is a complex problem that involves both strong coding
+ skills and a significant computational power access.
+ Thus, the priority is to
+\end_layout
+
+\begin_layout Itemize
+finalize state-of-the-art implementation that will be a basis for future
+ uncertainty models integration.
+ 
+\end_layout
+
+\begin_layout Itemize
+define the set of algorithms for uncertainty representation.
+ In section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Batch-Active-Learning"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ we showed that the uncertainty algorithms work well only in particular
+ cases.
+ When the parameters distribution is well-estimated the training and prediction
+ performance reaches tremendous results.
+ 
+\end_layout
+
+\begin_layout Standard
+Further part of the work will be measured on combining the active learning
+ strategy with such a heavy model as coreference resolution.
+ We believe that the contribution in this part will be crucial.
+ We expect to 
+\end_layout
+
+\begin_layout Itemize
+add uncertainty to CR superstructure without its propagation to the embedding
+ fine tuning.
+ Due to the complex architecture with multiple layers Vadam 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "khan2018fast"
+literal "false"
+
+\end_inset
+
+ and Variational Dropout 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "gal2017concrete"
+literal "false"
+
+\end_inset
+
+ are perfect candidates to start with
+\end_layout
+
+\begin_layout Itemize
+introduce hot and warm start approaches for heavy weight models that will
+ immensely reduce learning time and training labels acquisition process
+\end_layout
+
+\begin_layout Itemize
+propagate uncertainty learning to text embedding
+\end_layout
+
+\begin_layout Standard
+The output of the study will allow us to use the architecture agnostic empirical
+ model weights distribution estimate for better noise measurement, faster
+ learning, and label distribution prediction, specifically for different
+ types of CR task embedding superstructure.
+\end_layout
+
+\begin_layout Chapter
 Active Learning 
 \end_layout
 
 \begin_layout Standard
 In this section we show two vast comparative studies that cover not only
  single instance and batch active learning problems but also a newer approach
- on fine tuning the algorithms without a full retraining.
- The research involves a detailed state-of-the-art algorithms study in the
+ on fine tuning algorithms without a full retraining.
+ The report involves a detailed state-of-the-art algorithms study in the
  active learning field with the additional novelty (e.g.
  hot and warm starts), modification and extension of learning algorithms
  (e.g.
  optimal combination of algorithm steps).
+ The studies were applied on easier problems with more simple architectures.
+ We believe that results in this chapter are a good basis for the additional
+ contribution, which will be used for CR extension.
+ 
 \end_layout
 
 \begin_layout Section
@@ -1874,6 +2304,7 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Box Frameless
 position "t"
 hor_pos "c"
@@ -1890,7 +2321,7 @@ separation "3pt"
 shadowsize "4pt"
 framecolor "black"
 backgroundcolor "none"
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -2950,7 +3381,7 @@ separation "3pt"
 shadowsize "4pt"
 framecolor "black"
 backgroundcolor "none"
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -4057,7 +4488,7 @@ separation "3pt"
 shadowsize "4pt"
 framecolor "black"
 backgroundcolor "none"
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -4759,7 +5190,7 @@ separation "3pt"
 shadowsize "4pt"
 framecolor "black"
 backgroundcolor "none"
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -7767,7 +8198,7 @@ literal "false"
 \end_layout
 
 \begin_layout Subsection
-Results 
+Results and Discussions 
 \begin_inset CommandInset label
 LatexCommand label
 name "sec:batch_active_learning_results"
@@ -8006,12 +8437,18 @@ Despite the fact that we were able to push the limits of both single and
  batch active learning problems, there are still plenty of nuances that
  must be solved.
  The studied techniques work well on rather simpler neural networks.
- Hence, a clear further research objective is algorithms generalization
- to more complex neural networks.
+ Hence, clear further research objectives are 
+\end_layout
+
+\begin_layout Itemize
+algorithms' generalization to more complex neural networks.
  The larger the network is, the harder it is to perform a training/fine-tuning
  sequence, an additional training data selection and the uncertainty representat
-ions.
- Some extensions of the studied algorithms exist e.g.
+ions
+\end_layout
+
+\begin_layout Itemize
+extensions of the studied algorithms e.g.
  Variational Dropout 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -8028,388 +8465,11 @@ literal "false"
 
 \end_inset
 
- for more complex methods.
- We also expect our research to follow with more sophisticated and architecture
- agnostic warm start neural network training.
+ for more complex architectures and smarted uncertainty enrichment
 \end_layout
 
-\begin_layout Standard
-\begin_inset Newpage newpage
-\end_inset
-
-
-\end_layout
-
-\begin_layout Part
-Coreference Resolution
-\end_layout
-
-\begin_layout Standard
-In this part we introduce a coreference resolution problem and a state of
- art description.
- In addition, we formulate our CR objective and the active learning to CR
- vision of the further research.
- 
-\end_layout
-
-\begin_layout Standard
-The grand research from Google 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "ovadia2019can"
-literal "false"
-
-\end_inset
-
- shows that the point-wise estimate of model parameters does not usually
- result in an optimal approach.
- The models uncertainty measurement through the estimate of the empirical
- model weights distribution has already shown remarkable results in the
- active learning fields both in Computer Vision 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "gal2017deep"
-literal "false"
-
-\end_inset
-
-, and NLP in such tasks like NER 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "shen2017deep"
-literal "false"
-
-\end_inset
-
-, 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "lowell2019practical"
-literal "false"
-
-\end_inset
-
-, text classification 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "an2018deep"
-literal "false"
-
-\end_inset
-
- and other applications.
- 
-\end_layout
-
-\begin_layout Standard
-We aim to utilize the knowledge of extended uncertainty algorithms (as it
- was shown in 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "sahan2022active"
-literal "false"
-
-\end_inset
-
-, 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "gal2017concrete"
-literal "false"
-
-\end_inset
-
-, ...) throughout single/multi instances learning, hot/warm/cold start training
- and adapt it to the CR problem to improve the existing framework.
-\end_layout
-
-\begin_layout Section
-Introduction to Coreference Resolution Problem
-\end_layout
-
-\begin_layout Standard
-Modern Coreference Resolution (CR) algorithms are combinations of sophisticated
- vector embeddings representing context and deep neural network superstructures
- that perform the coreference resolution itself.
- The set of existing models for natural language understanding (NLU) is
- vast.
- Arguably, one of the most prominent points in the history of such models
- is when the continuous bag-of-words and skipgram approaches were introduced
- 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "mikolov2013efficient"
-literal "false"
-
-\end_inset
-
-.
- At that point, machines started to learn the context surrounding particular
- words.
- Their vector representations acquired the ability to represent this context,
- meaning proximity of such vectors in terms of a metric of choice (L2, cosine/an
-gular similarity) veritably described similarity of words or contexts.
- Still, models of these types were far from perfect, as they provided one
- with constant vectors per word for a pre-set vocabulary.
- Context-dependent representations with flexible vocabularies became available
- thanks to the introduction of the Transformer architecture 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "vaswani2017attention"
-literal "false"
-
-\end_inset
-
- applied to the vocabulary formed not only by words but also by character
- ngrams constructed as meaningful parts of words.
- The power of the Transformer architecture lies in its encoding and decoding
- capability, improved by the self-attention mechanism, which learns to put
- stress on parts of text sequences.
- This gave birth to a lot of transformer-based language models such as the
- Bidirectional Encoder Representations from Transformers (BERT) 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "devlin2018bert"
-literal "false"
-
-\end_inset
-
-, its fine-tuned variations 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "albert-Lan2020"
-literal "false"
-
-\end_inset
-
-, 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "liu2019roberta"
-literal "false"
-
-\end_inset
-
- and further models 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "gpt-Radford2018"
-literal "false"
-
-\end_inset
-
-, 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "use-Cer2018"
-literal "false"
-
-\end_inset
-
-.
- To this date, SpanBERT 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "cr-Joshi2019"
-literal "false"
-
-\end_inset
-
- has proven to be one of the most efficient architectures for coreference
- resolution.
- Its crucial difference from the standard BERT model is that it learns to
- predict the content of masked spans of text, taking into account their
- beginnings and endings, omitting the ability of the base BERT model to
- predict preceding sentences.
- In contrast, BERT learns to predict the following sentence for each preceding
- one and attempts to infer individual masked tokens.
- Another model worthy of mention is a Longformer 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Beltagy2020Longformer"
-literal "false"
-
-\end_inset
-
-, whose architecture is based on transformers capable of processing long
- documents up to 4096 tokens 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Beltagy2020Longformer"
-literal "false"
-
-\end_inset
-
-.
- The first end-to-end coreference resolution model was introduced in 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "cr-Lee17"
-literal "false"
-
-\end_inset
-
-.
- Its crucial difference from its predecessors was that it did not require
- preprocessing in the form of syntactic parsing or rule-based mention detection
- since the model can learn mention dependencies on its own to a forerunner-outpe
-rforming extent.
- The main idea of the model is to learn to score pairs of textual spans
- in such a way that takes into account, firstly, if these spans are entity
- mentions and, secondly, whether the pair is of type antecedent-descendant
- in terms of coreference.
- The NLU model of choice provides span representations.
- The goal is to assign to each span an antecedent span.
- 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "cr-Joshi2019"
-literal "false"
-
-\end_inset
-
- belongs to the state-of-the-art approaches which utilize the same structure
- on top of SpanBERT.
- One of the crucial drawbacks of the scoring approach is the choice of spans:
- sizes of relevant spans can be different, so a constant width of the window
- may not always be the right choice; spans can either overlap or be disjoint;
- if they overlap, the value of the overlap also becomes a hyperparameter.
- In addition to that, the number of scoring procedures is quadratic in complexit
-y: each span has to be scored against every its counterpart.
- If the length of the document is large, the memory needed to store all
- entity mentions may become an issue (in 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "cr-Xia2020"
-literal "false"
-
-\end_inset
-
- authors propose an incremental structure for the CR model, which needs
- a lot less memory for the price of a slight decrease in performance).
- While previous models are able to achieve decent results, their memory
- footprint is significant.
- The authors of 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Kirstain2021S2E"
-literal "false"
-
-\end_inset
-
- bypassed the need to create span representations, relying on a combination
- of bilinear functions applied on endpoint token representations.
- In addition to that, the new model is built on top of a Longformer encoder
- capable of processing long documents.
- Another work that reaches current state-of-the-art performance 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "dobrovolskii2021word"
-literal "false"
-
-\end_inset
-
- also avoids span based approach.
- Even though the author uses RoBERTa embedding 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "liu2019roberta"
-literal "false"
-
-\end_inset
-
-, the performance of the model is better than the one with Longformer.
- Author relies on attention mechanism that encodes tokens with the additional
- context based information from the surrounding.
- Hence, this is the argument of avoiding span based representation.
- When the CR classification is done, an additional span detection model
- is applied.
- Described approach helps to reduce the computational complexity from 
-\begin_inset Formula $O(n^{4})$
-\end_inset
-
- to 
-\begin_inset Formula $O(n^{2})$
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-For languages other than English, the state of art for the CR is arguably
- even farther behind.
- For example, coreference resolution for Czech was attempted on the PCEDT
- dataset 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "pcedt-Hajic2012"
-literal "false"
-
-\end_inset
-
- in 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "cr-cz-Novak17"
-literal "false"
-
-\end_inset
-
-.
- However, the overall performance of the approach did not reach the mark
- of 0.7 in terms of F-score (whereas English models show more than 0.8 F1
- score 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "dobrovolskii2021word"
-literal "false"
-
-\end_inset
-
-).
- In addition to that, no transformer-based NLU model was available at the
- time.
-\end_layout
-
-\begin_layout Section
-Objectives
-\end_layout
-
-\begin_layout Standard
-Coreference resolution is a complex problem that involves both strong coding
- skills and a significant computational power access.
- Thus, the priority is to finalize state-of-the-art implementation that
- will be a basis for future uncertainty models integration.
- The subsequent action is to define the set of algorithms for uncertainty
- representation.
- In section 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "sec:Batch-Active-Learning"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
- we showed that the uncertainty algorithms work well only in particular
- cases.
- When the parameters distribution is well-estimated the training and prediction
- performance reaches tremendous results.
- Further part of the work will be measured on combining the active learning
- strategy with such a heavy model as coreference resolution.
- We believe that the contribution in this part will be crucial.
- We expect to introduce hot and warm start approaches for heavy weight models
- that will immensely reduce learning time and training labels acquisition
- process.
- 
-\end_layout
-
-\begin_layout Standard
-The output of the study will allow us to use the architecture agnostic empirical
- model weights distribution estimate for better noise measurement, faster
- learning, and label distribution prediction, specifically for different
- types of CR task embedding superstructure.
+\begin_layout Itemize
+more sophisticated and architecture agnostic warm start neural network training
 \end_layout
 
 \begin_layout Standard
