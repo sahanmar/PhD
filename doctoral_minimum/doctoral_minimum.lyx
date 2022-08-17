@@ -646,7 +646,7 @@ literal "false"
 status open
 
 \begin_layout Plain Layout
-The paper is submitted to COLING conference 
+The paper is accepted to ITNLP conference 
 \end_layout
 
 \end_inset
@@ -1013,7 +1013,36 @@ Objectives
 \begin_layout Standard
 Coreference resolution is a complex problem that involves both strong coding
  skills and a significant computational power access.
- Thus, the priority is to
+ We worked with different implementations of coreference algorithms over
+ the last year (starting from end-to-end CR model released in 2017 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "cr-Lee17"
+literal "false"
+
+\end_inset
+
+, to state-of-the-art methods published in 2021 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dobrovolskii2021word"
+literal "false"
+
+\end_inset
+
+).
+ The provided code implementations were decomposed on building blocks with
+ step by step training steps assembling and debugging of training iterations
+ (not completed yet).
+ The combination of a very specific training data structure which must be
+ transformed to training data with a set of different scripts, and some
+ errors in code make it very hard to get to the fully functional state-of-art
+ solution.
+ 
+\end_layout
+
+\begin_layout Standard
+Thus, the priority is to
 \end_layout
 
 \begin_layout Itemize
@@ -1106,7 +1135,7 @@ In this section we show two vast comparative studies that cover not only
 \end_layout
 
 \begin_layout Section
-Single Instance Active Learning 
+Single Instance Active Learning
 \begin_inset Foot
 status open
 
@@ -1127,6 +1156,16 @@ literal "false"
 \end_inset
 
 
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+Single Instance Active
+\end_layout
+
+\end_inset
+
+ 
 \end_layout
 
 \begin_layout Standard
@@ -6973,8 +7012,8 @@ Batch Active Learning
 status open
 
 \begin_layout Plain Layout
-The major part of the content in this part was taken from the paper submitted
- to COLING conference 
+The major part of the content in this part was taken from the paper accepted
+ to ITNLP conference 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "sahan2022active"
@@ -6984,6 +7023,16 @@ literal "false"
 
 .
  
+\end_layout
+
+\end_inset
+
+
+\begin_inset Argument 1
+status open
+
+\begin_layout Plain Layout
+Batch Active Learning 
 \end_layout
 
 \end_inset
