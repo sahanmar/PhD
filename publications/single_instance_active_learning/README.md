@@ -1,6 +1,6 @@
 # Active Learning for Text Classification and Fake News Detection
 
-The paper was presented on ECNLPIR conference and rated with the best PhD student paper award. The participation certificate and the best student paper certificate are in the folder. 
+The [paper](https://ieeexplore.ieee.org/abstract/document/9644290) was presented on ECNLPIR conference and rated with the best PhD student paper award. The participation certificate and the best student paper certificate are in the folder. 
 
 The original project folder can be found [here](https://github.com/sahanmar/Peony/tree/master/Peony_article/active_learning_for_text_classification) 
 
